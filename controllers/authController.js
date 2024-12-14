@@ -13,16 +13,27 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
  * @returns {Object} JSON response with user object
  */
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, username, password } = req.body;
+  // return res.json({ email, username, password });
 
   try {
+    //TODO : Check if user already exists
+    const user = await db.query(
+      "SELECT * FROM users WHERE email = $1 OR username = $2;",
+      [email, username]
+    );
+
+    if (user.rows.length > 0) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Save user to the database
     const result = await db.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username;",
-      [username, hashedPassword]
+      "INSERT INTO users (username,email, password) VALUES ($1, $2, $3) RETURNING id, username;",
+      [username, email, hashedPassword]
     );
 
     res.status(201).json({ user: result.rows[0] });
@@ -39,11 +50,11 @@ exports.register = async (req, res) => {
  * @returns {Object} JSON response with JWT token or error message
  */
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
     // Fetch user from the database
-    const result = await db.query("SELECT * FROM users WHERE username = $1;", [
-      username,
+    const result = await db.query("SELECT * FROM users WHERE email = $1;", [
+      email,
     ]);
     const user = result.rows[0];
 
