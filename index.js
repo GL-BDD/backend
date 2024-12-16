@@ -4,15 +4,17 @@ require("dotenv").config();
 const bd = require("./db/connections");
 
 // const artisansRoute = require("./routes/artisans");
-const authroutes = require("./routes/auth");
+const authRoutes = require("./routes/auth");
+const clientRoutes = require("./routes/clients");
 
 app.use(express.json());
 // app.use("/api/artisans", artisansRoute);
-app.use("/api/auth", authroutes);
+app.use("/api/clients", clientRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", async (req, res) => {
   const response = await bd.query("SELECT * FROM playing_with_neon;");
-  res.send(response.rows);
+  res.send(response.rows[0]);
 });
 
 const PORT = process.env.PORT || 5000;

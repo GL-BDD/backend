@@ -1,10 +1,10 @@
-const db = require("../db/connection");
+const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
 
 const artisanQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/artisans.sql"), "utf8")
-  .split("--");
+  .split("---");
 
 exports.getArtisans = async (req, res) => {
   try {
