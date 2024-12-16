@@ -16,8 +16,6 @@ pids/
 # Environment Variables
 .env
 
-# Database Dumps
-*.sql
 
 # Coverage Reports
 coverage/
