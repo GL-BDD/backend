@@ -1,10 +1,9 @@
--- Fetch all artisans
+-- Fetch all artisans 0
 SELECT * FROM artisans;
 
---- Insert a new artisan
-INSERT INTO artisans (name, specialization, contact_info, portfolio, certifications, insurance_details)
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id;
+----- create a new artisan 1
+INSERT INTO artisans (username,email,phoneNumber, password) VALUES ($1, $2, $3,$4) RETURNING id, username;
+
 
 
 

@@ -2,44 +2,69 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../db/connections");
 require("dotenv").config();
+const { validationResult } = require("express-validator");
+const fs = require("fs");
+const path = require("path");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
-/**
- * Register a new user
- * @param {string} req.body.username Username to register
- * @param {string} req.body.password Password to register
- * @returns {Object} JSON response with user object
- */
+const artisanQueries = fs
+  .readFileSync(path.join(__dirname, "../db/queries/artisans.sql"), "utf8")
+  .split("---");
+const clientQueries = fs
+  .readFileSync(path.join(__dirname, "../db/queries/clients.sql"), "utf8")
+  .split("---");
+
 exports.register = async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, username, phoneNumber, password, role } = req.body;
   // return res.json({ email, username, password });
 
-  try {
-    //TODO : Check if user already exists
-    const user = await db.query(
-      "SELECT * FROM users WHERE email = $1 OR username = $2;",
-      [email, username]
-    );
+  //validation error handling----------
+  const validationRes = validationResult(req);
+  const validationErrors = validationRes.array();
+  console.error(validationErrors);
+  if (validationErrors.length > 0)
+    return res.status(400).json({ validationErrors });
+  //-----------
 
-    if (user.rows.length > 0) {
-      return res.status(400).json({ message: "User already exists" });
+  //TODO : register depending on the client
+  if (role === "client") {
+    try {
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Save user to the database
+      const result = await db.query(clientQueries[6], [
+        username,
+        email,
+        phoneNumber,
+        hashedPassword,
+      ]);
+      return res.status(201).json({ user: result.rows[0] });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Error registering client" });
     }
+  }
+  if (role === "artisan") {
+    try {
+      // TODO: add artisan specific fields
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Save user to the database
-    const result = await db.query(
-      "INSERT INTO users (username,email, password) VALUES ($1, $2, $3) RETURNING id, username;",
-      [username, email, hashedPassword]
-    );
-
-    res.status(201).json({ user: result.rows[0] });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error registering user" });
+      // Save user to the database
+      const result = await db.query(artisanQueries[1], [
+        username,
+        email,
+        phoneNumber,
+        hashedPassword,
+      ]);
+      return res.status(201).json({ user: result.rows[0] });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Error registering client" });
+    }
   }
 };
 
@@ -50,10 +75,16 @@ exports.register = async (req, res) => {
  * @returns {Object} JSON response with JWT token or error message
  */
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
+
+  if (!role || (role !== "client" && role !== "artisan")) {
+    return res.status(400).json({ message: "Invalid role specified" });
+  }
+
   try {
-    // Fetch user from the database
-    const result = await db.query("SELECT * FROM users WHERE email = $1;", [
+    // Determine the table to query based on the role
+    const table = role === "client" ? "clients" : "artisans";
+    const result = await db.query(`SELECT * FROM ${table} WHERE email = $1;`, [
       email,
     ]);
     const user = result.rows[0];
@@ -72,7 +103,7 @@ exports.login = async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign(
-      { id: user.id, username: user.username }, // Payload
+      { id: user.id, username: user.username, role }, // Payload
       JWT_SECRET, // Secret key
       {
         expiresIn: JWT_EXPIRES_IN, // Token expiration

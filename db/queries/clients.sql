@@ -26,4 +26,6 @@ delete from clients
 where id = $1
 RETURNING id;
 
+----- create a client 6
+INSERT INTO clients (username,email,phoneNumber, password) VALUES ($1, $2, $3,$4) RETURNING id, username;
 
