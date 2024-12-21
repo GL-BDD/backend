@@ -2,7 +2,7 @@ const { checkSchema } = require('express-validator');
 
 const artisanSchema = {
   create: checkSchema({
-    name: {
+    username: {
       in: ['body'],
       isString: true,
       notEmpty: true,
@@ -46,7 +46,7 @@ const artisanSchema = {
     }
   }),
   update: checkSchema({
-    name: {
+    username: {
       in: ['body'],
       isString: true,
       optional: true,

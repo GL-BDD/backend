@@ -18,7 +18,7 @@ exports.getArtisans = async (req, res) => {
 
 exports.createArtisan = async (req, res) => {
   const {
-    name,
+    username,
     specialization,
     contactInfo,
     portfolio,
@@ -26,8 +26,8 @@ exports.createArtisan = async (req, res) => {
     insuranceDetails,
   } = req.body;
   try {
-    const result = await db.query(artisanQueries[1], [
-      name,
+    const result = await db.query(artisanQueries[2], [
+      username,
       specialization,
       contactInfo,
       portfolio,
