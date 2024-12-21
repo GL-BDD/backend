@@ -44,8 +44,9 @@ exports.getClientById = async (req, res) => {
 
 exports.updateClient = async (req, res) => {
   const { username, email } = req.body;
-  // const id = req.user.id
-  const id = 1; // for testing the api
+  console.log(req.user);
+  const id = req.user.id
+   // const id = 1; // for testing the api
   try {
     let updatedClient = null;
 
@@ -79,8 +80,8 @@ exports.updateClient = async (req, res) => {
 };
 
 exports.deleteClient = async (req, res) => {
-  // const id = req.user.id; // when the client deletes his account
-  const id = 2; // for testing the api
+  const id = req.user.id; // when the client deletes his account
+  // const id = 2; // for testing the api
   if (!id) {
     res.status(400).json("message: Client ID is required");
   }

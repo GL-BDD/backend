@@ -41,35 +41,34 @@ exports.createArtisan = async (req, res) => {
   }
 };
 
-
 exports.getArtisanById = async (req, res) => {
-  const { id } = req.params;
-  if (!id) {
-    return res.status(400).json({ message: "Artisan ID is required" });
+  const id = parseInt(req.params.id);
+  
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ message: "Invalid Artisan ID" });
   }
 
   try {
-    const result = await db.query(artisanQueries[1], [id]);
+    const result = await db.query(artisanQueries[10],[id]);
     const artisan = result.rows[0];
 
     if (!artisan) {
       return res.status(404).json({ message: "Artisan not found" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Artisan fetched successfully", artisan });
+    return res.status(200).json({ 
+      message: "Artisan fetched successfully", 
+      artisan 
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching artisan:", error);
     return res.status(500).json({ message: "Error fetching artisan" });
   }
 };
 
-
-
 exports.updateArtisan = async (req, res) => {
   const {
-    name,
+    username,
     specialization,
     contact_info,
     portfolio,
@@ -81,8 +80,8 @@ exports.updateArtisan = async (req, res) => {
   try {
     let updatedArtisan = null;
 
-    if (name) {
-      const result = await db.query(artisanQueries[3], [name, id]);
+    if (username) {
+      const result = await db.query(artisanQueries[3], [username, id]);
       if (result.rows.length > 0) {
         updatedArtisan = result.rows[0];
       }
@@ -139,15 +138,13 @@ exports.updateArtisan = async (req, res) => {
   }
 };
 
-
-
 exports.deleteArtisan = async (req, res) => {
   const id = req.user.id; // Use authenticated user's ID
   if (!id) {
     res.status(400).json({ message: "Artisan ID is required" });
   }
   try {
-    const result = await db.query(artisanQueries[5], [id]);
+    const result = await db.query(artisanQueries[9], [id]);
     const artisanId = result.rows[0];
     if (!artisanId) {
       return res.status(404).json({ message: "Artisan not found" });

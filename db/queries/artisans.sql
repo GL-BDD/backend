@@ -50,3 +50,6 @@ RETURNING *;
 DELETE FROM artisans
 WHERE id = $1
 RETURNING id;
+
+----- Fetch an artisan by id 10
+SELECT * FROM artisans WHERE id = $1;

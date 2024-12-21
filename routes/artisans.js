@@ -12,7 +12,7 @@ const validateRequest = require("../middleware/validationMiddleware");
 const router = express.Router();
 
 router.get("/", getArtisans);
-router.get("/:id", getArtisanById);
+router.get("/:id([0-9]+)", getArtisanById);  // Add regex validation for numeric ID
 router.post("/", artisanSchema.create, validateRequest, createArtisan);
 router.put("/", authenticateToken, artisanSchema.update, validateRequest, updateArtisan);
 router.delete("/", authenticateToken, deleteArtisan);

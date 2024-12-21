@@ -28,7 +28,7 @@ exports.registerSchema = checkSchema({
   },
   password: {
     isLength: {
-      options: { minLength: 8 },
+      options: { min: 8 },
       errorMessage: "Password must be at least 8 characters long",
     },
     notEmpty: true,
