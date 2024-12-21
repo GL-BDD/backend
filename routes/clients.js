@@ -13,6 +13,6 @@ router.get("/:id", getClientById);
 router.put("/", updateClient); // client updates his profile
 router.delete("/", deleteClient); // client deletes his profile
 // router.put("/:id", updateClient); // should be accessed by an admin
-// router.delete("/:id", deleteClient); // should be accessed by an admin
+router.delete("/:id", deleteClient); // should be accessed by an admin
 
 module.exports = router;
