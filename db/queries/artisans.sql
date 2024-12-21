@@ -4,6 +4,11 @@ SELECT * FROM artisans;
 ----- create a new artisan 1
 INSERT INTO artisans (username,email,phoneNumber, password) VALUES ($1, $2, $3,$4) RETURNING id, username;
 
+----- Update artisan name 3
+UPDATE artisans
+SET username = $1
+WHERE id = $2
+RETURNING *;
 
 ----- Update artisan name 3
 UPDATE artisans
