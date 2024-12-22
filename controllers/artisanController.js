@@ -6,6 +6,10 @@ const artisanQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/artisans.sql"), "utf8")
   .split("---");
 
+const certificationQueries = fs
+  .readFileSync(path.join(__dirname, "../db/queries/certifications.sql"), "utf8")
+  .split("---");
+
 exports.getArtisans = async (req, res) => {
   try {
     const result = await db.query(artisanQueries[0]); // First query in artisans.sql
@@ -157,3 +161,74 @@ exports.deleteArtisan = async (req, res) => {
     res.status(500).json({ message: "Error deleting artisan" });
   }
 };
+
+exports.addCertification = async (req, res) => {
+  const artisanId = req.user.id;
+
+  try {
+    if (!req.files || !req.files.attachment) {
+      return res.status(400).send("Attachment required");
+    }
+    const fileBuffer = req.files.attachment.data;
+
+    const result = await db.query(
+      certificationQueries[1],
+      [artisanId, fileBuffer] 
+    );
+
+    res.status(201).json({
+      message: "Certification added successfully",
+      certificationId: result.rows[0].id,
+    });
+  } catch (error) {
+    res.status(500).send("Internal server error");
+  }
+};
+
+exports.getCertifications = async (req, res) => {
+  const artisanId = parseInt(req.params.id); // Get artisan ID from URL params
+
+  if (!artisanId || isNaN(artisanId)) {
+    return res.status(400).json({ message: "Invalid Artisan ID" });
+  }
+
+  try {
+    const result = await db.query(
+      certificationQueries[3],
+      [artisanId]
+    );
+
+    res.status(200).json({
+      message: "Certifications retrieved successfully",
+      certifications: result.rows,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving certifications" });
+  }
+};
+
+exports.deleteCertification = async (req, res) => {
+
+  const certificationId = parseInt(req.params.id);
+
+  if (!certificationId || isNaN(certificationId)) {
+    return res.status(400).json({ message: "Invalid Certification ID" });
+  }
+  const artisanId = req.user.id;
+  try {
+    const result = await db.query(
+      certificationQueries[2],
+      [certificationId,artisanId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Certification not found" });
+    }
+
+    res.status(200).json({ message: "Certification deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting certification" });
+  }
+}

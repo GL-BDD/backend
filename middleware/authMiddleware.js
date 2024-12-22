@@ -4,9 +4,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"] || "";
-  console.log(authHeader)
+  // console.log(authHeader)
   const token = authHeader.split(" ")[1] || "";
-  console.log(token)
+  // console.log(token)
   if (!token) {
     return res.status(401).json({ message: "Access token required" });
   }

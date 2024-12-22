@@ -22,3 +22,8 @@ CREATE TABLE IF NOT EXISTS clients (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS Certifications(
+    id SERIAL PRIMARY KEY,
+    artisan_id INTEGER REFERENCES artisans(id),
+    attachment BYTEA
+);
