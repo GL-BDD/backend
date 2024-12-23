@@ -170,6 +170,7 @@ exports.addCertification = async (req, res) => {
       return res.status(400).send("Attachment required");
     }
     const fileBuffer = req.files.attachment.data;
+    console.log(fileBuffer)
 
     const result = await db.query(
       certificationQueries[1],
