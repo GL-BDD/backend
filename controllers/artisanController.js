@@ -47,22 +47,22 @@ exports.createArtisan = async (req, res) => {
 
 exports.getArtisanById = async (req, res) => {
   const id = parseInt(req.params.id);
-  
+
   if (!id || isNaN(id)) {
     return res.status(400).json({ message: "Invalid Artisan ID" });
   }
 
   try {
-    const result = await db.query(artisanQueries[10],[id]);
+    const result = await db.query(artisanQueries[10], [id]);
     const artisan = result.rows[0];
 
     if (!artisan) {
       return res.status(404).json({ message: "Artisan not found" });
     }
 
-    return res.status(200).json({ 
-      message: "Artisan fetched successfully", 
-      artisan 
+    return res.status(200).json({
+      message: "Artisan fetched successfully",
+      artisan
     });
   } catch (error) {
     console.error("Error fetching artisan:", error);
@@ -162,6 +162,30 @@ exports.deleteArtisan = async (req, res) => {
   }
 };
 
+
+
+exports.getArtisans = async (req, res) => {
+
+  const { specialization } = req.query;
+
+  try {
+    let result;
+    if (specialization) {
+      result = await db.query(artisanQueries[11], [specialization]);
+    } else {
+      res.json({ message: "No specialization provided for filtering" });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+
+}
+
+
 exports.addCertification = async (req, res) => {
   const artisanId = req.user.id;
 
@@ -174,7 +198,7 @@ exports.addCertification = async (req, res) => {
 
     const result = await db.query(
       certificationQueries[1],
-      [artisanId, fileBuffer] 
+      [artisanId, fileBuffer]
     );
 
     res.status(201).json({
@@ -220,7 +244,7 @@ exports.deleteCertification = async (req, res) => {
   try {
     const result = await db.query(
       certificationQueries[2],
-      [certificationId,artisanId]
+      [certificationId, artisanId]
     );
 
     if (result.rowCount === 0) {
