@@ -27,3 +27,15 @@ CREATE TABLE IF NOT EXISTS Certifications(
     artisan_id INTEGER REFERENCES artisans(id),
     attachment BYTEA
 );
+
+
+-- ProjectProposal(ProposalID,Description,DateCreated,Status,#CustomerID,#ArtisanID)
+CREATE TABLE IF NOT EXISTS ProjectProposal(
+    id SERIAL PRIMARY KEY,
+    description VARCHAR(255),
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(255),
+    client_id INTEGER REFERENCES clients(id),
+    artisan_id INTEGER REFERENCES artisans(id),
+    specialization VARCHAR(255)
+);
