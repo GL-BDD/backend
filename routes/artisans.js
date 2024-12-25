@@ -24,7 +24,7 @@ router.get("/:id([0-9]+)", getArtisanById);  // Add regex validation for numeric
 router.post("/", artisanSchema.create, validateRequest, createArtisan);
 router.put("/", authenticateToken, artisanSchema.update, validateRequest, updateArtisan);
 router.delete("/", authenticateToken, deleteArtisan);
-
+router.get("/?specialization=:specialization", getArtisans);
 
 // routes for certifications
 // Remove express.raw() and use express-fileupload for the /certifications route
@@ -41,5 +41,7 @@ router.post(
 router.get("/certifications/:id([0-9]+)", getCertifications);
 
 router.delete("/certifications/:id([0-9]+)",authenticateToken, deleteCertification);
+
+
 
 module.exports = router;

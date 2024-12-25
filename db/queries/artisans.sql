@@ -53,3 +53,6 @@ RETURNING id;
 
 ----- Fetch an artisan by id 10
 SELECT * FROM artisans WHERE id = $1;
+
+----- Fetch all artisans with the same specialization 11
+SELECT * FROM artisans WHERE specialization = $1;
