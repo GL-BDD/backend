@@ -10,6 +10,9 @@ const {
   addCertification,
   getCertifications,
   deleteCertification,
+  createProject,
+  getArtisanProjects,
+  deleteProject,
 } = require("../controllers/artisanController");
 const { authenticateToken } = require("../middleware/authMiddleware");
 const artisanSchema = require("../validations/aritsanValidation");
@@ -20,11 +23,16 @@ const router = express.Router();
 router.use(fileUpload());
 
 router.get("/", getArtisans);
-router.get("/:id([0-9]+)", getArtisanById);  // Add regex validation for numeric ID
+router.get("/:id([0-9]+)", getArtisanById); // Add regex validation for numeric ID
 router.post("/", artisanSchema.create, validateRequest, createArtisan);
-router.put("/", authenticateToken, artisanSchema.update, validateRequest, updateArtisan);
+router.put(
+  "/",
+  authenticateToken,
+  artisanSchema.update,
+  validateRequest,
+  updateArtisan
+);
 router.delete("/", authenticateToken, deleteArtisan);
-
 
 // routes for certifications
 // Remove express.raw() and use express-fileupload for the /certifications route
@@ -40,6 +48,16 @@ router.post(
 );
 router.get("/certifications/:id([0-9]+)", getCertifications);
 
-router.delete("/certifications/:id([0-9]+)",authenticateToken, deleteCertification);
+router.delete(
+  "/certifications/:id([0-9]+)",
+  authenticateToken,
+  deleteCertification
+);
+
+router.post("/project", authenticateToken, createProject);
+
+router.get("/project/:id([0-9]+)", authenticateToken, getArtisanProjects);
+
+router.delete("/project/:id([0-9]+)", authenticateToken, deleteProject);
 
 module.exports = router;
