@@ -57,3 +57,12 @@ CREATE TABLE IF NOT EXISTS ProjectProposal(
     artisan_id INTEGER REFERENCES artisans(id) ON DELETE SET NULL,
     specialization VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS quotes(
+    id SERIAL PRIMARY KEY,
+    artisan_id INTEGER REFERENCES artisans(id) ON DELETE CASCADE NOT NULL,
+    proposal_id INTEGER REFERENCES ProjectProposal(id) ON DELETE CASCADE NOT NULL,
+    quote INTEGER NOT NULL,
+    description TEXT,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)

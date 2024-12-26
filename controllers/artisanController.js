@@ -333,7 +333,7 @@ exports.getArtisanProjects = async (req, res) => {
 
 exports.deleteProject = async (req, res) => {
   // TODO : check if the user is the owner of the project
-  const { id } = req.params;
+  const { id } = req.body;
   const userId = req.user.id;
   try {
     const result = await db.query(projectQueries[5], [id, userId]);
