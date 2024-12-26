@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS ProjectProposal(
     description VARCHAR(255),
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(255),
-    client_id INTEGER REFERENCES clients(id),
-    artisan_id INTEGER REFERENCES artisans(id),
+    client_id INTEGER REFERENCES clients(id) ON DELETE CASCADE,
+    artisan_id INTEGER REFERENCES artisans(id) ON DELETE SET NULL,
     specialization VARCHAR(255)
 );
