@@ -168,6 +168,24 @@ exports.deleteArtisan = async (req, res) => {
   }
 };
 
+exports.getArtisans = async (req, res) => {
+  const { specialization } = req.query;
+
+  try {
+    let result;
+    if (specialization) {
+      result = await db.query(artisanQueries[11], [specialization]);
+    } else {
+      res.json({ message: "No specialization provided for filtering" });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.addCertification = async (req, res) => {
   const artisanId = req.user.id;
 

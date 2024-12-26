@@ -46,7 +46,7 @@ exports.updateClient = async (req, res) => {
   const { username, email } = req.body;
   console.log(req.user);
   const id = req.user.id
-   // const id = 1; // for testing the api
+  // const id = 1; // for testing the api
   try {
     let updatedClient = null;
 

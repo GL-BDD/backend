@@ -33,6 +33,7 @@ router.put(
   updateArtisan
 );
 router.delete("/", authenticateToken, deleteArtisan);
+router.get("/?specialization=:specialization", getArtisans);
 
 // routes for certifications
 // Remove express.raw() and use express-fileupload for the /certifications route
