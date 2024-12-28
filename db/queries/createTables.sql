@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS project_images(
 
 
 -- ProjectProposal(ProposalID,Description,DateCreated,Status,#CustomerID,#ArtisanID)
-CREATE TABLE IF NOT EXISTS ProjectProposal(
+CREATE TABLE IF NOT EXISTS project_preposal(
     id SERIAL PRIMARY KEY,
     description VARCHAR(255),
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

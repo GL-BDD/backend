@@ -7,7 +7,7 @@ const bd = require("./db/connections");
 const authRoutes = require("./routes/auth");
 const clientRoutes = require("./routes/clients");
 const artisansRoute = require("./routes/artisans");
-const projectRoutes = require("./routes/projects");
+const projectRoutes = require("./routes/projects.js");
 
 app.use(express.json());
 // app.use("/api/artisans", artisansRoute);

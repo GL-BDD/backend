@@ -5,7 +5,7 @@ const {
     createProjectForOneClient,
     createProjectForAllArtisans,
     deleteProject
-    } = require("../controllers/projectProsController");
+    } = require("../controllers/projectProsController.js");
 
 
 
