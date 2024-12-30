@@ -3,6 +3,9 @@ const app = express();
 require("dotenv").config();
 const bd = require("./db/connections");
 
+const cors = require("cors");
+app.use(cors());
+
 // const artisansRoute = require("./routes/artisans");
 const authRoutes = require("./routes/auth");
 const clientRoutes = require("./routes/clients");
