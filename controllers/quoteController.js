@@ -26,11 +26,22 @@ exports.createQuote = async (req, res) => {
   }
 };
 
+exports.getQuotesByProposalId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(quoteQueries[1], [id]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "error fetching quotes" });
+  }
+};
+
 exports.deleteQuote = async (req, res) => {
   const artisanId = req.user.id;
   const { id } = req.params;
   try {
-    const result = await db.query(quoteQueries[1], [artisanId, id]);
+    const result = await db.query(quoteQueries[2], [artisanId, id]);
     const quoteId = result.rows[0].id;
     return res
       .status(200)
