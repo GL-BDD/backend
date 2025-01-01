@@ -14,6 +14,15 @@ const projectRoutes = require("./routes/projects.js");
 const quoteRoutes = require("./routes/quotes");
 
 app.use(express.json());
+const fileUpload = require("express-fileupload");
+app.use(fileUpload());
+
+app.post("/*", function (req, res, next) {
+  console.log(req.method, req.url);
+  console.log(req.body);
+  console.log(req.files);
+  next();
+});
 // app.use("/api/artisans", artisansRoute);
 app.use("/api/clients", clientRoutes);
 app.use("/api/auth", authRoutes);
