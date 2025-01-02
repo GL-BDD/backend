@@ -9,13 +9,30 @@ const projectQueries = fs
   )
   .split("---");
 
-exports.getAllProjects = async (req, res) => {
+exports.getProjects = async (req, res) => {
+  const { specialization, artisanId } = req.query;
   try {
-    const result = await db.query(projectQueries[0]);
-    const projects = result.rows;
-    return res
-      .status(200)
-      .json({ message: "Projects fetched successfully", projects });
+    if (!specialization && !artisanId) {
+      const result = await db.query(projectQueries[0]);
+      const projects = result.rows;
+      return res
+        .status(200)
+        .json({ message: "Projects fetched successfully", projects });
+    }
+    if (specialization) {
+      const result = await db.query(projectQueries[4], [specialization]);
+      const projects = result.rows;
+      return res
+        .status(200)
+        .json({ message: "Projects fetched successfully", projects });
+    }
+    if (artisanId) {
+      const result = await db.query(projectQueries[5], [artisanId]);
+      const projects = result.rows;
+      return res
+        .status(200)
+        .json({ message: "Projects fetched successfully", projects });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching projects" });
