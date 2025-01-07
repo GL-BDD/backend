@@ -276,7 +276,7 @@ exports.createProject = async (req, res) => {
           attachments = [attachments];
         }
         let resultRows = [];
-        for (attachment of attachments) {
+        for (let attachment of attachments) {
           const fileBuffer = attachment.data;
           const result = await db.query(projectQueries[2], [
             projectId,
@@ -318,7 +318,7 @@ exports.getArtisanProjects = async (req, res) => {
   try {
     const result = await db.query(projectQueries[4], [id]);
     const projects = result.rows;
-    for (project of projects) {
+    for (let project of projects) {
       project.attachments = await getProjectAttachments(project.id);
       // console.log(project);
     }
