@@ -15,7 +15,8 @@ jobs:
       - name: Deploy to Render
         uses: JorgeLNJunior/render-deploy@v1.4.3
         with:
-          service_id: ${{ secrets.RENDER_SERVICE_ID }} # Required
-          api_key: ${{ secrets.RENDER_API_KEY }} # Required
-          wait_deploy: true # Optional, default: false
-          github_deployment: true # Optional, default: false
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
+          github_deployment: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
