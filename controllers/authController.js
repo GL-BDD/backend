@@ -103,11 +103,17 @@ exports.login = async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign(
-      { id: user.id, username: user.username, role }, // Payload
+      {
+        id: user.id,
+        username: user.username,
+        role,
+        email: user.email,
+        specialization: user.specialization,
+      }, // Payload
       JWT_SECRET, // Secret key
       {
         expiresIn: JWT_EXPIRES_IN, // Token expiration
-      }
+      },
     );
 
     // Respond with the generated token

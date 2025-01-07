@@ -5,7 +5,7 @@ const db = require("./connections"); // Your database connection file
 (async () => {
   try {
     const seedSql = fs
-      .readFileSync(path.join(__dirname, "seedData.sql"))
+      .readFileSync(path.join(__dirname, "./queries/seedData.sql"))
       .toString();
     await db.query(seedSql);
     console.log("Database seeded successfully!");
