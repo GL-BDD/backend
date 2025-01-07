@@ -5,7 +5,7 @@ const path = require("path");
 
 const createTables = fs.readFileSync(
   path.join(__dirname, "./db/queries/createTables.sql"),
-  "utf8"
+  "utf8",
 );
 (async () => {
   try {

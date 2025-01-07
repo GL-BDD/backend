@@ -33,7 +33,7 @@ router.put(
   isArtisan,
   artisanSchema.update,
   validateRequest,
-  updateArtisan
+  updateArtisan,
 );
 router.delete("/", authenticateToken, deleteArtisan);
 router.get("/?specialization=:specialization", getArtisans);
@@ -49,7 +49,7 @@ router.post(
     console.log(req.files?.attachment);
     next();
   },
-  addCertification
+  addCertification,
 );
 router.get("/certifications/:id([0-9]+)", getCertifications);
 
@@ -57,7 +57,7 @@ router.delete(
   "/certifications/:id([0-9]+)",
   authenticateToken,
   isArtisan,
-  deleteCertification
+  deleteCertification,
 );
 
 router.post("/project", authenticateToken, isArtisan, createProject);
@@ -68,7 +68,7 @@ router.delete(
   "/project/:id([0-9]+)",
   authenticateToken,
   isArtisan,
-  deleteProject
+  deleteProject,
 );
 
 module.exports = router;

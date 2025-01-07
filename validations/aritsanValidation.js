@@ -1,94 +1,94 @@
-const { checkSchema } = require('express-validator');
+const { checkSchema } = require("express-validator");
 
 const artisanSchema = {
   create: checkSchema({
     username: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       notEmpty: true,
       trim: true,
-      errorMessage: 'Name is required and must be a string'
+      errorMessage: "Name is required and must be a string",
     },
     specialization: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       notEmpty: true,
       trim: true,
-      errorMessage: 'Specialization is required and must be a string'
+      errorMessage: "Specialization is required and must be a string",
     },
     contact_info: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       notEmpty: true,
       trim: true,
-      errorMessage: 'Contact information is required and must be a string'
+      errorMessage: "Contact information is required and must be a string",
     },
     portfolio: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Portfolio must be a string'
+      errorMessage: "Portfolio must be a string",
     },
     certifications: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Certifications must be a string'
+      errorMessage: "Certifications must be a string",
     },
     insurance_details: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Insurance details must be a string'
-    }
+      errorMessage: "Insurance details must be a string",
+    },
   }),
   update: checkSchema({
     username: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Name must be a string'
+      errorMessage: "Name must be a string",
     },
     specialization: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Specialization must be a string'
+      errorMessage: "Specialization must be a string",
     },
     contact_info: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Contact information must be a string'
+      errorMessage: "Contact information must be a string",
     },
     portfolio: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Portfolio must be a string'
+      errorMessage: "Portfolio must be a string",
     },
     certifications: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Certifications must be a string'
+      errorMessage: "Certifications must be a string",
     },
     insurance_details: {
-      in: ['body'],
+      in: ["body"],
       isString: true,
       optional: true,
       trim: true,
-      errorMessage: 'Insurance details must be a string'
-    }
-  })
+      errorMessage: "Insurance details must be a string",
+    },
+  }),
 };
 
 module.exports = artisanSchema;

@@ -5,7 +5,7 @@ const path = require("path");
 const projectQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/prjectProposal.sql"),
-    "utf8"
+    "utf8",
   )
   .split("---");
 

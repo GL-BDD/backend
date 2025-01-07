@@ -32,7 +32,7 @@ describe("authController", () => {
           id: expect.any(Number),
           username: expect.any(String),
         }),
-      })
+      }),
     );
   });
 
@@ -78,7 +78,7 @@ describe("authController", () => {
     expect(loginRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
         token: expect.any(String),
-      })
+      }),
     );
   });
 
@@ -98,7 +98,7 @@ describe("authController", () => {
     await authController.login(req, res);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ message: "Invalid credentials" })
+      expect.objectContaining({ message: "Invalid credentials" }),
     );
   });
 });
