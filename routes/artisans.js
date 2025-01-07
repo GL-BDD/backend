@@ -1,5 +1,4 @@
 const express = require("express");
-const multer = require("multer");
 const fileUpload = require("express-fileupload");
 const {
   getArtisans,
@@ -14,7 +13,10 @@ const {
   getArtisanProjects,
   deleteProject,
 } = require("../controllers/artisanController");
-const { authenticateToken } = require("../middleware/authMiddleware");
+const {
+  authenticateToken,
+  isArtisan,
+} = require("../middleware/authMiddleware");
 const artisanSchema = require("../validations/aritsanValidation");
 const validateRequest = require("../middleware/validationMiddleware");
 const router = express.Router();
@@ -28,6 +30,7 @@ router.post("/", artisanSchema.create, validateRequest, createArtisan);
 router.put(
   "/",
   authenticateToken,
+  isArtisan,
   artisanSchema.update,
   validateRequest,
   updateArtisan
@@ -40,6 +43,7 @@ router.get("/?specialization=:specialization", getArtisans);
 router.post(
   "/certifications",
   authenticateToken,
+  isArtisan,
   (req, res, next) => {
     // Log info to ensure file is uploaded
     console.log(req.files?.attachment);
@@ -52,13 +56,19 @@ router.get("/certifications/:id([0-9]+)", getCertifications);
 router.delete(
   "/certifications/:id([0-9]+)",
   authenticateToken,
+  isArtisan,
   deleteCertification
 );
 
-router.post("/project", authenticateToken, createProject);
+router.post("/project", authenticateToken, isArtisan, createProject);
 
 router.get("/project/:id([0-9]+)", authenticateToken, getArtisanProjects);
 
-router.delete("/project/:id([0-9]+)", authenticateToken, deleteProject);
+router.delete(
+  "/project/:id([0-9]+)",
+  authenticateToken,
+  isArtisan,
+  deleteProject
+);
 
 module.exports = router;

@@ -15,3 +15,9 @@ VALUES ($1, $2, $3, $4) RETURNING *;
 DELETE FROM project_preposal
 WHERE id = $1
 RETURNING * ;
+
+----- get projects by specialization 4
+SELECT * FROM project_preposal WHERE specialization = $1
+
+----- get projects by artisan id 5
+SELECT * FROM project_preposal WHERE artisan_id = $1
