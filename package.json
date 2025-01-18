@@ -8,8 +8,7 @@
     "dev": "nodemon index.js",
     "test": "jest",
     "format": "prettier --write .",
-    "lint": "eslint ."
-    
+    "lint": "eslint ."  
   },
   "author": "",
   "license": "ISC",
