@@ -276,6 +276,7 @@ exports.createProject = async (req, res) => {
           attachments = [attachments];
         }
         let resultRows = [];
+        // TODO : i'm so dumb for this
         for (attachment of attachments) {
           const fileBuffer = attachment.data;
           const result = await db.query(projectQueries[2], [

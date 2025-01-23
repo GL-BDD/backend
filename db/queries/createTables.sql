@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS project_images(
 
 
 -- ProjectProposal(ProposalID,Description,DateCreated,Status,#CustomerID,#ArtisanID)
-CREATE TABLE IF NOT EXISTS project_preposal(
+CREATE TABLE IF NOT EXISTS project_proposals(
     id SERIAL PRIMARY KEY,
     description VARCHAR(255),
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -65,4 +65,11 @@ CREATE TABLE IF NOT EXISTS quotes(
     quote INTEGER NOT NULL,
     description TEXT,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
+
+CREATE TABLE IF NOT EXISTS project_proposal_images(
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER REFERENCES project_proposals(id) ON DELETE CASCADE,
+    attachment BYTEA,
+    encoding VARCHAR(255)
+);

@@ -1,6 +1,7 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
+const { decode } = require("punycode");
 
 const projectQueries = fs
   .readFileSync(
@@ -8,6 +9,21 @@ const projectQueries = fs
     "utf8"
   )
   .split("---");
+
+const decodeImages = (projects) => {
+  const projectsWithImages = projects.map((project) => {
+    if (project.attachment) {
+      // Convert the BYTEA (binary) data to a Base64 string
+      const base64Image = Buffer.from(project.attachment).toString("base64");
+      return {
+        ...project,
+        attachment: `data:image/jpeg;base64,${base64Image}`, // Adjust MIME type if necessary
+      };
+    }
+    return project;
+  });
+  return projectsWithImages;
+};
 
 exports.getProjects = async (req, res) => {
   const { specialization, artisanId } = req.query;
@@ -22,9 +38,11 @@ exports.getProjects = async (req, res) => {
     if (specialization) {
       const result = await db.query(projectQueries[4], [specialization]);
       const projects = result.rows;
-      return res
-        .status(200)
-        .json({ message: "Projects fetched successfully", projects });
+      const projectsWithImages = decodeImages(projects);
+      return res.status(200).json({
+        message: "Projects fetched successfully",
+        projects: projectsWithImages,
+      });
     }
     if (artisanId) {
       const result = await db.query(projectQueries[5], [artisanId]);
@@ -39,6 +57,34 @@ exports.getProjects = async (req, res) => {
   }
 };
 
+const addProposalImages = async (projectId, coming_attachments) => {
+  console.log(projectId);
+  if (coming_attachments) {
+    try {
+      let attachments = coming_attachments;
+      if (!Array.isArray(attachments)) {
+        attachments = [attachments];
+      }
+      let resultRows = [];
+      for (attachment of attachments) {
+        const fileBuffer = attachment.data;
+        const encoding = attachment.encoding;
+        const result = await db.query(projectQueries[6], [
+          projectId,
+          fileBuffer,
+          encoding,
+        ]);
+        resultRows.push(result.rows[0]);
+      }
+      console.log("we here");
+    } catch (error) {
+      console.error(error);
+      return {
+        message: `error adding attachments to the project proposals, the project is still created`,
+      };
+    }
+  }
+};
 exports.createProjectForOneClient = async (req, res) => {
   const client_id = req.user.id;
   const { description, status, artisan_id } = req.body;
@@ -58,6 +104,7 @@ exports.createProjectForOneClient = async (req, res) => {
 exports.createProjectForAllArtisans = async (req, res) => {
   const client_id = req.user.id;
   const { description, status, specialization } = req.body;
+  const attachments = req.files.attachments;
   try {
     const result = await db.query(projectQueries[2], [
       client_id,
@@ -65,6 +112,8 @@ exports.createProjectForAllArtisans = async (req, res) => {
       description,
       status,
     ]);
+    const projectId = result.rows[0].id;
+    await addProposalImages(projectId, attachments);
     res.status(201).json({ id: result.rows[0].id });
   } catch (error) {
     console.error(error);
