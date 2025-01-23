@@ -113,7 +113,7 @@ exports.login = async (req, res) => {
       JWT_SECRET, // Secret key
       {
         expiresIn: JWT_EXPIRES_IN, // Token expiration
-      }
+      },
     );
 
     // Respond with the generated token

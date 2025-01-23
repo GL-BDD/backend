@@ -9,7 +9,7 @@ const artisanQueries = fs
 const certificationQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/certifications.sql"),
-    "utf8"
+    "utf8",
   )
   .split("---");
 const projectQueries = fs
@@ -319,7 +319,7 @@ exports.getArtisanProjects = async (req, res) => {
   try {
     const result = await db.query(projectQueries[4], [id]);
     const projects = result.rows;
-    for (project of projects) {
+    for (let project of projects) {
       project.attachments = await getProjectAttachments(project.id);
       // console.log(project);
     }
