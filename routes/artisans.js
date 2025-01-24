@@ -1,5 +1,4 @@
 const express = require("express");
-const fileUpload = require("express-fileupload");
 const {
   getArtisans,
   getArtisanById,
@@ -21,8 +20,6 @@ const artisanSchema = require("../validations/aritsanValidation");
 const validateRequest = require("../middleware/validationMiddleware");
 const router = express.Router();
 
-// Add express-fileupload middleware
-router.use(fileUpload());
 
 router.get("/", getArtisans);
 router.get("/:id([0-9]+)", getArtisanById); // Add regex validation for numeric ID
