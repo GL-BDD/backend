@@ -11,6 +11,7 @@ const projectQueries = fs
   .split("---");
 
 const decodeImages = (projects) => {
+  if (!projects.length) return [projects];
   const projectsWithImages = projects.map((project) => {
     if (project.attachment) {
       // Convert the BYTEA (binary) data to a Base64 string
@@ -54,6 +55,22 @@ exports.getProjects = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching projects" });
+  }
+};
+
+exports.getProjectById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(projectQueries[8], [id]);
+    const project = result.rows[0];
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    decodeImages(project)
+    return res.status(200).json({ message: "Project fetched successfully", project });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error fetching project" });
   }
 };
 

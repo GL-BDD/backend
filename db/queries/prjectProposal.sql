@@ -1,6 +1,7 @@
 -- fetch all project Proposals 0
 SELECT * FROM project_proposals
 left join project_proposal_images on project_proposals.id = project_proposal_images.project_id
+left join clients on clients.id = project_proposals.client_id
 ;
 
 
@@ -19,13 +20,17 @@ WHERE id = $1
 RETURNING * ;
 
 ----- get projects by specialization 4
-SELECT * FROM project_proposals
+SELECT clients.id client_id,clients.username client_username,project_proposals.*,project_proposal_images.*
+FROM project_proposals
 left join project_proposal_images on project_proposals.id = project_proposal_images.project_id
+left join clients on clients.id = project_proposals.client_id
 WHERE specialization = $1
 
 ----- get projects by artisan id 5
-SELECT * FROM project_proposals 
+SELECT clients.id client_id,clients.username client_username,project_proposals.*,project_proposal_images.*
+FROM project_proposals 
 left join project_proposal_images on project_proposals.id = project_proposal_images.project_id
+left join clients on clients.id = project_proposals.client_id
 WHERE artisan_id = $1
 
 ----- add an attachment 6
@@ -35,3 +40,14 @@ RETURNING id;
 
 ----- get attachments for a project 7
 select * from project_proposal_images where project_id = $1;
+
+----- get proposal by id 8
+SELECT 
+clients.id client_id,
+clients.username client_username,
+project_proposals.*,
+project_proposal_images.*
+FROM project_proposals 
+left join project_proposal_images on project_proposals.id = project_proposal_images.project_id
+left join clients on clients.id = project_proposals.client_id
+WHERE project_proposals.id = $1
