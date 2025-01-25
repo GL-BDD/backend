@@ -1,6 +1,7 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
+const {decodeImages} = require("../utils/decodeImage");
 
 const artisanQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/artisans.sql"), "utf8")
@@ -319,10 +320,12 @@ exports.getArtisanProjects = async (req, res) => {
   try {
     const result = await db.query(projectQueries[4], [id]);
     const projects = result.rows;
+    //TODO: this is nonesense
     for (let project of projects) {
       project.attachments = await getProjectAttachments(project.id);
       // console.log(project);
     }
+    // decodeImages(projects);
     return res
       .status(200)
       .json({ message: "Projects fetched successfully", projects });

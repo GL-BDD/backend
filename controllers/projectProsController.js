@@ -1,7 +1,7 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
-const { decode } = require("punycode");
+const { decodeImages } = require("../utils/decodeImage");
 
 const projectQueries = fs
   .readFileSync(
@@ -9,22 +9,6 @@ const projectQueries = fs
     "utf8",
   )
   .split("---");
-
-const decodeImages = (projects) => {
-  if (!projects.length) return [projects];
-  const projectsWithImages = projects.map((project) => {
-    if (project.attachment) {
-      // Convert the BYTEA (binary) data to a Base64 string
-      const base64Image = Buffer.from(project.attachment).toString("base64");
-      return {
-        ...project,
-        attachment: `data:image/jpeg;base64,${base64Image}`, // Adjust MIME type if necessary
-      };
-    }
-    return project;
-  });
-  return projectsWithImages;
-};
 
 exports.getProjects = async (req, res) => {
   const { specialization, artisanId } = req.query;
