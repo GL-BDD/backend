@@ -183,8 +183,8 @@ exports.getArtisans = async (req, res) => {
 };
 
 exports.addCertification = async (req, res) => {
-  const artisanId = req.user.id;
-
+  const artisan_id= req.user.id;
+  const { issue_date } = req.body;
   try {
     if (!req.files || !req.files.attachment) {
       return res.status(400).send("Attachment required");
@@ -193,8 +193,9 @@ exports.addCertification = async (req, res) => {
     console.log(fileBuffer);
 
     const result = await db.query(certificationQueries[1], [
-      artisanId,
-      fileBuffer,
+        artisan_id,
+        issue_date,
+        fileBuffer,
     ]);
 
     res.status(201).json({
