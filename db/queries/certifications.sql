@@ -2,7 +2,7 @@
 SELECT * FROM certifications;
 
 ----- create a new certification 1
-INSERT INTO certifications (artisan_id, issue_date , attachement ) VALUES ($1, $2,$3) RETURNING certification_id, artisan_id;
+INSERT INTO certifications (certification_name, issue_date , attachment,mime_type, artisan_id ) VALUES ($1, $2,$3,$4,$5) RETURNING certification_id, artisan_id;
 
 
 ----- delete a certification 2

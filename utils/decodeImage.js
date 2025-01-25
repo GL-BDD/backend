@@ -10,16 +10,16 @@ exports.decodeImages = (projects) => {
       };
     }
     if (project.attachments) {
-        // Convert the BYTEA (binary) data to a Base64 string
-        project.attachments = project.attachments.map((attachment) => {
-            const base64Image = Buffer.from(attachment).toString("base64");
-            return {
-                ...project.attachments,
-                attachment: `data:image/jpeg;base64,${base64Image}`, // Adjust MIME type if necessary
-            };
-        })
-      }
-    
+      // Convert the BYTEA (binary) data to a Base64 string
+      project.attachments = project.attachments.map((attachment) => {
+        const base64Image = Buffer.from(attachment).toString("base64");
+        return {
+          ...project.attachments,
+          attachment: `data:image/jpeg;base64,${base64Image}`, // Adjust MIME type if necessary
+        };
+      });
+    }
+
     return project;
   });
   return projectsWithImages;

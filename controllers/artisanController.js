@@ -10,7 +10,7 @@ const artisanQueries = fs
 const certificationQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/certifications.sql"),
-    "utf8",
+    "utf8"
   )
   .split("---");
 const projectQueries = fs
@@ -34,9 +34,7 @@ exports.createArtisan = async (req, res) => {
     password,
     phone_number,
     specialization,
-    description
-
-
+    description,
   } = req.body;
   try {
     const result = await db.query(artisanQueries[1], [
@@ -45,8 +43,7 @@ exports.createArtisan = async (req, res) => {
       password,
       phone_number,
       specialization,
-      description
-
+      description,
     ]);
     res.status(201).json({ id: result.rows[0].id });
   } catch (error) {
@@ -63,7 +60,7 @@ exports.getArtisanById = async (req, res) => {
   }
 
   try {
-    const result = await db.query(artisanQueries[10], [id]);
+    const result = await db.query(artisanQueries[8], [id]);
     const artisan = result.rows[0];
 
     if (!artisan) {
@@ -81,15 +78,9 @@ exports.getArtisanById = async (req, res) => {
 };
 
 exports.updateArtisan = async (req, res) => {
-  const {
-    username,
-    email,
-    phone_number,
-    specialization,
-    description
-  } = req.body;
+  const { username, email, phone_number, specialization, description } =
+    req.body;
   const id = req.user.id; // Use authenticated user's ID
-  // const id = 1; // For testing purposes
   try {
     let updatedArtisan = null;
 
@@ -104,7 +95,6 @@ exports.updateArtisan = async (req, res) => {
       if (result.rows.length > 0) {
         updatedArtisan = result.rows[0];
       }
-
     }
     if (phone_number) {
       const result = await db.query(artisanQueries[4], [phone_number, id]);
@@ -124,9 +114,6 @@ exports.updateArtisan = async (req, res) => {
         updatedArtisan = result.rows[0];
       }
     }
-
-
-
 
     if (!updatedArtisan) {
       return res
@@ -169,13 +156,16 @@ exports.getArtisans = async (req, res) => {
 
   try {
     let result;
-    if (specialization) {
-      result = await db.query(artisanQueries[9], [specialization]);
+    if (!specialization) {
+      result = await db.query(artisanQueries[0]);
     } else {
-      res.json({ message: "No specialization provided for filtering" });
+      result = await db.query(artisanQueries[9], [specialization]);
     }
 
-    res.status(200).json(result.rows);
+    const artisans = result.rows;
+    return res
+      .status(200)
+      .json({ message: "Artisans fetched successfully", artisans });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -251,13 +241,66 @@ exports.deleteCertification = async (req, res) => {
   }
 };
 
+// exports.createProject = async (req, res) => {
+//   const artisan_id = req.user.id;
+//   const { description, date, price, location } = req.body;
+//   console.log("creating");
+//   try {
+//     const creationResult = await db.query(projectQueries[1], [
+//       description,
+//       date,
+//       price,
+//       location,
+//       artisan_id,
+//     ]);
+//     const projectId = creationResult.rows[0].id;
+
+//     if (req.files.attachments) {
+//       try {
+//         let attachments = req.files.attachments;
+//         if (!Array.isArray(attachments)) {
+//           attachments = [attachments];
+//         }
+//         let resultRows = [];
+//         // TODO : i'm so dumb for this
+//         for (attachment of attachments) {
+//           const fileBuffer = attachment.data;
+//           const result = await db.query(projectQueries[2], [
+//             projectId,
+//             fileBuffer,
+//           ]);
+//           resultRows.push(result.rows[0]);
+//         }
+//         return res.json(resultRows);
+//       } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({
+//           message: `error adding attachments to the project the project ${projectId} is created`,
+//         });
+//       }
+//     }
+
+//     // const result = await db.query(certificationQueries[1], [
+//     //   artisanId,
+//     //   fileBuffer,
+//     // ]);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("error creating project");
+//   }
+// };
+
 exports.createProject = async (req, res) => {
   const artisan_id = req.user.id;
   const { description, date, price, location } = req.body;
   console.log("creating");
   try {
     const creationResult = await db.query(projectQueries[1], [
-      description, date, price, location, artisan_id
+      description,
+      date,
+      price,
+      location,
+      artisan_id,
     ]);
     const projectId = creationResult.rows[0].id;
 
@@ -269,7 +312,7 @@ exports.createProject = async (req, res) => {
         }
         let resultRows = [];
         // TODO : i'm so dumb for this
-        for (attachment of attachments) {
+        for (let attachment of attachments) {
           const fileBuffer = attachment.data;
           const result = await db.query(projectQueries[2], [
             projectId,
@@ -286,10 +329,6 @@ exports.createProject = async (req, res) => {
       }
     }
 
-    // const result = await db.query(certificationQueries[1], [
-    //   artisanId,
-    //   fileBuffer,
-    // ]);
   } catch (error) {
     console.error(error);
     res.status(500).send("error creating project");
@@ -331,7 +370,9 @@ exports.deleteProject = async (req, res) => {
   const { id } = req.body;
   const userId = req.user.id;
   if (id !== userId) {
-    return res.status(400).json({ message: "You are not the owner of the project" });
+    return res
+      .status(400)
+      .json({ message: "You are not the owner of the project" });
   }
   try {
     const result = await db.query(projectQueries[5], [id, userId]);

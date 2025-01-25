@@ -59,7 +59,7 @@ CREATE TABLE
         accepted_id SERIAL PRIMARY KEY,
         accepted_price INTEGER,
         status VARCHAR(255), --TODO: add enum
-        proposal_id INTEGER REFERENCES project_proposals (proposal_id) ON DELETE CASCADE,
+        proposal_id INTEGER UNIQUE REFERENCES project_proposals (proposal_id) ON DELETE CASCADE,
         artisan_id INTEGER REFERENCES artisans (artisan_id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -115,6 +115,7 @@ CREATE TABLE
         certification_name VARCHAR(255),
         issue_date DATE,
         attachment BYTEA,
+        mime_type VARCHAR(255),
         artisan_id INTEGER NOT NULL REFERENCES artisans (artisan_id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
