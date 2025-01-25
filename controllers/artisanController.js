@@ -1,7 +1,7 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
-const {decodeImages} = require("../utils/decodeImage");
+const { decodeImages } = require("../utils/decodeImage");
 
 const artisanQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/artisans.sql"), "utf8")
@@ -33,19 +33,19 @@ exports.createArtisan = async (req, res) => {
     email,
     password,
     phone_number,
-      specialization,
-      description
+    specialization,
+    description
 
 
   } = req.body;
   try {
     const result = await db.query(artisanQueries[1], [
       username,
-        email,
-        password,
-        phone_number,
-        specialization,
-        description
+      email,
+      password,
+      phone_number,
+      specialization,
+      description
 
     ]);
     res.status(201).json({ id: result.rows[0].id });
@@ -84,7 +84,7 @@ exports.updateArtisan = async (req, res) => {
   const {
     username,
     email,
-      phone_number,
+    phone_number,
     specialization,
     description
   } = req.body;
@@ -100,17 +100,17 @@ exports.updateArtisan = async (req, res) => {
       }
     }
     if (email) {
-        const result = await db.query(artisanQueries[3], [email, id]);
-        if (result.rows.length > 0) {
-            updatedArtisan = result.rows[0];
-        }
+      const result = await db.query(artisanQueries[3], [email, id]);
+      if (result.rows.length > 0) {
+        updatedArtisan = result.rows[0];
+      }
 
     }
     if (phone_number) {
-        const result = await db.query(artisanQueries[4], [phone_number, id]);
-        if (result.rows.length > 0) {
-            updatedArtisan = result.rows[0];
-        }
+      const result = await db.query(artisanQueries[4], [phone_number, id]);
+      if (result.rows.length > 0) {
+        updatedArtisan = result.rows[0];
+      }
     }
     if (specialization) {
       const result = await db.query(artisanQueries[5], [specialization, id]);
@@ -119,10 +119,10 @@ exports.updateArtisan = async (req, res) => {
       }
     }
     if (description) {
-        const result = await db.query(artisanQueries[6], [description, id]);
-        if (result.rows.length > 0) {
-            updatedArtisan = result.rows[0];
-        }
+      const result = await db.query(artisanQueries[6], [description, id]);
+      if (result.rows.length > 0) {
+        updatedArtisan = result.rows[0];
+      }
     }
 
 
@@ -183,7 +183,7 @@ exports.getArtisans = async (req, res) => {
 };
 
 exports.addCertification = async (req, res) => {
-  const artisan_id= req.user.id;
+  const artisan_id = req.user.id;
   const { issue_date } = req.body;
   try {
     if (!req.files || !req.files.attachment) {
@@ -193,9 +193,9 @@ exports.addCertification = async (req, res) => {
     console.log(fileBuffer);
 
     const result = await db.query(certificationQueries[1], [
-        artisan_id,
-        issue_date,
-        fileBuffer,
+      artisan_id,
+      issue_date,
+      fileBuffer,
     ]);
 
     res.status(201).json({
@@ -253,11 +253,11 @@ exports.deleteCertification = async (req, res) => {
 
 exports.createProject = async (req, res) => {
   const artisan_id = req.user.id;
-  const { description , date , price , location } = req.body;
+  const { description, date, price, location } = req.body;
   console.log("creating");
   try {
     const creationResult = await db.query(projectQueries[1], [
-      description , date , price , location,  artisan_id
+      description, date, price, location, artisan_id
     ]);
     const projectId = creationResult.rows[0].id;
 
@@ -330,7 +330,7 @@ exports.deleteProject = async (req, res) => {
   // TODO : check if the user is the owner of the project
   const { id } = req.body;
   const userId = req.user.id;
-  if ( id !== userId) {
+  if (id !== userId) {
     return res.status(400).json({ message: "You are not the owner of the project" });
   }
   try {
