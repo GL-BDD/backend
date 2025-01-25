@@ -1,0 +1,162 @@
+{
+    "artisans":[{"artisan_id":1,"username":"artisan1","email":"artisan1@artisan.com","password":"$2b$10$JoEUQc7IAYfajbCaPqXH8O.MZcRfs/dgBNWk/WYWIvA2X9AJGiFEu","phone_number":"0666666666","specialization":"plombier","description":null,"created_at":"2025-01-25 11:16:31.816698"},{"artisan_id":2,"username":"artisan2","email":"artisan2@artisan.com","password":"$2b$10$27oY40JX0AzJ9aD588KCBuSZfljAlhZbKiuBTIX5ifbIKaMJs/7aC","phone_number":"0777777777","specialization":null,"description":null,"created_at":"2025-01-25 11:25:34.094898"}],
+    "clients":[{"client_id":1,"username":"client1","email":"client1@client.com","password":"$2b$10$.fkYWu7yccB6JhYv9BDt9ufnci/.j/cJH/wqCxekhCRMeQBzZN6X6","phone_number":"0555555555","created_at":"2025-01-25 11:22:58.756803"},{"client_id":2,"username":"client2","email":"client2@client.com","password":"$2b$10$cR4nRki92GsEFn.Mi34vcegi4fGrIrYcBguNe7JyY.lBkBXt0BqQK","phone_number":"0655993322","created_at":"2025-01-25 11:25:57.879543"}],
+    "portfolio_projects": [
+      {
+        "portfolio_project_id": 1,
+        "description": "Custom wooden dining table",
+        "date": "2023-09-15",
+        "price": 1200,
+        "location": "Springfield",
+        "artisan_id": 1
+      },
+      {
+        "portfolio_project_id": 2,
+        "description": "Living room wall painting",
+        "date": "2023-08-20",
+        "price": 800,
+        "location": "Shelbyville",
+        "artisan_id": 2
+      }
+    ],
+    "project_proposals": [
+      {
+        "proposal_id": 1,
+        "description": "Build a custom bookshelf",
+        "start_date": "2023-11-01",
+        "end_date": "2023-11-10",
+        "specialization": "plombier",
+        "accepted_status": "Pending",
+        "client_id": 1,
+        "artisan_id": 1
+      },
+      {
+        "proposal_id": 2,
+        "description": "Paint the exterior of the house",
+        "start_date": "2023-11-15",
+        "end_date": "2023-11-25",
+        "specialization": "plombier",
+        "accepted_status": "Accepted",
+        "client_id": 2,
+        "artisan_id": 2
+      }
+    ],
+    "accepted_projects": [
+      {
+        "accepted_id": 1,
+        "accepted_price": 1500,
+        "status": "In Progress",
+        "proposal_id": 1,
+        "artisan_id": 1
+      },
+      {
+        "accepted_id": 2,
+        "accepted_price": 1000,
+        "status": "Completed",
+        "proposal_id": 2,
+        "artisan_id": 2
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_id": 1,
+        "amount": 1500,
+        "invoice_file": null,
+        "payment_status": "Pending",
+        "accepted_id": 1
+      },
+      {
+        "invoice_id": 2,
+        "amount": 1000,
+        "invoice_file": null,
+        "payment_status": "Paid",
+        "accepted_id": 2      
+    }
+    ],
+    "portfolio_project_images": [
+      {
+        "image_id": 1,
+        "attachment": null,
+        "encoding": "base64",
+        "mime_type": "image/jpeg",
+        "project_id": 1
+      },
+      {
+        "image_id": 2,
+        "attachment": null,
+        "encoding": "base64",
+        "mime_type": "image/png",
+        "project_id": 2
+      }
+    ],
+    "project_proposal_images": [
+      {
+        "image_id": 1,
+        "attachment": null,
+        "encoding": "base64",
+        "mime_type": "image/jpeg",
+        "project_id": 1
+      },
+      {
+        "image_id": 2,
+        "attachment": null,
+        "encoding": "base64",
+        "mime_type": "image/png",
+        "project_id": 2
+      }
+    ],
+    "accepted_project_images": [
+      {
+        "image_id": 1,
+        "attachment": null,
+        "encoding": "base64",
+        "mime_type": "image/jpeg",
+        "project_id": 1,
+        "created_at": "2023-10-07T11:30:00Z"
+      },
+      {
+        "image_id": 2,
+        "attachment": null,
+        "encoding": "base64",
+        "mime_type": "image/png",
+        "project_id": 2,
+        "created_at": "2023-10-08T12:30:00Z"
+      }
+    ],
+    "certifications": [
+      {
+        "certification_id": 1,
+        "certification_name": "Certified Carpenter",
+        "issue_date": "2022-05-01",
+        "attachment": null,
+        "artisan_id": 1,
+        "created_at": "2023-10-01T12:35:00Z"
+      },
+      {
+        "certification_id": 2,
+        "certification_name": "Professional Painter",
+        "issue_date": "2021-08-15",
+        "attachment": null,
+        "artisan_id": 2,
+        "created_at": "2023-10-02T13:35:00Z"
+      }
+    ],
+    "quotes": [
+      {
+        "quote_id": 1,
+        "price": 1500,
+        "unit": "projet",
+        "artisan_id": 1,
+        "proposal_id": 1,
+        "created_at": "2023-10-05T09:15:00Z"
+      },
+      {
+        "quote_id": 2,
+        "price": 1000,
+        "unit": "projet",
+        "artisan_id": 2,
+        "proposal_id": 2,
+        "created_at": "2023-10-06T10:15:00Z"
+      }
+    ]
+  }

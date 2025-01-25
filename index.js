@@ -30,8 +30,7 @@ app.use("/api/artisans", artisansRoute);
 app.use("/api/projects", projectRoutes);
 app.use("/api/quotes", quoteRoutes);
 app.get("/", async (req, res) => {
-  const response = await bd.query("SELECT * FROM playing_with_neon;");
-  res.send(response.rows[0]);
+  res.send("hello from server");
 });
 
 const PORT = process.env.PORT || 5011;
