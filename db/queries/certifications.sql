@@ -10,4 +10,5 @@ DELETE FROM certifications
 WHERE certification_id = $1 and artisan_id = $2
 
 ----- Fetch all certifications for one artisan 3
-SELECT * FROM certifications WHERE artisan_id = $1;
+SELECT *,TO_CHAR(issue_date:: DATE, 'dd/MM/yyyy') issue_date
+FROM certifications WHERE artisan_id = $1;

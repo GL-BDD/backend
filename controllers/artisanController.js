@@ -17,15 +17,15 @@ const projectQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/projects.sql"), "utf8")
   .split("---");
 
-exports.getArtisans = async (req, res) => {
-  try {
-    const result = await db.query(artisanQueries[0]); // First query in artisans.sql
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+// exports.getArtisans = async (req, res) => {
+//   try {
+//     const result = await db.query(artisanQueries[0]); // First query in artisans.sql
+//     res.status(200).json(result.rows);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 exports.createArtisan = async (req, res) => {
   const {

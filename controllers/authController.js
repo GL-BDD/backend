@@ -102,7 +102,6 @@ exports.login = async (req, res) => {
     }
 
     // Generate JWT
-    console.log(user);
     const token = jwt.sign(
       {
         id: role == "artisan" ? user.artisan_id : user.client_id,
