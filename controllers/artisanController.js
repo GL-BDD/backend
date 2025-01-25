@@ -252,17 +252,12 @@ exports.deleteCertification = async (req, res) => {
 };
 
 exports.createProject = async (req, res) => {
-  const artisanId = req.user.id;
-  const { client_id, description, date, price, location } = req.body;
+  const artisan_id = req.user.id;
+  const { description , date , price , location } = req.body;
   console.log("creating");
   try {
     const creationResult = await db.query(projectQueries[1], [
-      artisanId,
-      client_id,
-      description,
-      date,
-      price,
-      location,
+      description , date , price , location,  artisan_id
     ]);
     const projectId = creationResult.rows[0].id;
 
@@ -335,6 +330,9 @@ exports.deleteProject = async (req, res) => {
   // TODO : check if the user is the owner of the project
   const { id } = req.body;
   const userId = req.user.id;
+  if ( id !== userId) {
+    return res.status(400).json({ message: "You are not the owner of the project" });
+  }
   try {
     const result = await db.query(projectQueries[5], [id, userId]);
     return res.status(200).json({
