@@ -239,56 +239,6 @@ exports.deleteCertification = async (req, res) => {
     res.status(500).json({ message: "Error deleting certification" });
   }
 };
-
-// exports.createProject = async (req, res) => {
-//   const artisan_id = req.user.id;
-//   const { description, date, price, location } = req.body;
-//   console.log("creating");
-//   try {
-//     const creationResult = await db.query(projectQueries[1], [
-//       description,
-//       date,
-//       price,
-//       location,
-//       artisan_id,
-//     ]);
-//     const projectId = creationResult.rows[0].id;
-
-//     if (req.files.attachments) {
-//       try {
-//         let attachments = req.files.attachments;
-//         if (!Array.isArray(attachments)) {
-//           attachments = [attachments];
-//         }
-//         let resultRows = [];
-//         // TODO : i'm so dumb for this
-//         for (attachment of attachments) {
-//           const fileBuffer = attachment.data;
-//           const result = await db.query(projectQueries[2], [
-//             projectId,
-//             fileBuffer,
-//           ]);
-//           resultRows.push(result.rows[0]);
-//         }
-//         return res.json(resultRows);
-//       } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({
-//           message: `error adding attachments to the project the project ${projectId} is created`,
-//         });
-//       }
-//     }
-
-//     // const result = await db.query(certificationQueries[1], [
-//     //   artisanId,
-//     //   fileBuffer,
-//     // ]);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("error creating project");
-//   }
-// };
-
 exports.createProject = async (req, res) => {
   const artisan_id = req.user.id;
   console.log(`artisan_id: ${artisan_id}`);
