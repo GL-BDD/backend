@@ -180,7 +180,6 @@ exports.addCertification = async (req, res) => {
       return res.status(400).send("Attachment required");
     }
     const fileBuffer = req.files.attachment.data;
-    console.log(fileBuffer);
 
     const result = await db.query(certificationQueries[1], [
       artisan_id,
@@ -292,6 +291,7 @@ exports.deleteCertification = async (req, res) => {
 
 exports.createProject = async (req, res) => {
   const artisan_id = req.user.id;
+  console.log(`artisan_id: ${artisan_id}`);
   const { description, date, price, location } = req.body;
   console.log("creating");
   try {
@@ -302,7 +302,8 @@ exports.createProject = async (req, res) => {
       location,
       artisan_id,
     ]);
-    const projectId = creationResult.rows[0].id;
+    const projectId = creationResult.portlfolio_project_id;
+    console.log(`projectId: ${projectId}`);
 
     if (req.files.attachments) {
       try {
@@ -314,9 +315,12 @@ exports.createProject = async (req, res) => {
         // TODO : i'm so dumb for this
         for (let attachment of attachments) {
           const fileBuffer = attachment.data;
+          const fileType = attachment.mimetype;
+          console.log(`fileType : ${fileType}`);
           const result = await db.query(projectQueries[2], [
             projectId,
             fileBuffer,
+            fileType
           ]);
           resultRows.push(result.rows[0]);
         }
