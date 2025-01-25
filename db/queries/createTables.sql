@@ -115,8 +115,8 @@ CREATE TABLE IF NOT EXISTS quotes(
     price INTEGER NOT NULL, --changed
     unit VARCHAR(255) NOT NULL, --changed added TODO : add enum
     -- description TEXT, changed removed
-    artisan_id INTEGER REFERENCES artisans(id) ON DELETE CASCADE NOT NULL,
-    proposal_id INTEGER REFERENCES ProjectProposal(id) ON DELETE CASCADE NOT NULL,
+    artisan_id INTEGER REFERENCES artisans(artisan_id) ON DELETE CASCADE NOT NULL,
+    proposal_id INTEGER REFERENCES project_proposals(proposal_id) ON DELETE CASCADE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
