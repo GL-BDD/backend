@@ -30,20 +30,23 @@ exports.getArtisans = async (req, res) => {
 exports.createArtisan = async (req, res) => {
   const {
     username,
-    specialization,
-    contactInfo,
-    portfolio,
-    certifications,
-    insuranceDetails,
+    email,
+    password,
+    phone_number,
+      specialization,
+      description
+
+
   } = req.body;
   try {
-    const result = await db.query(artisanQueries[2], [
+    const result = await db.query(artisanQueries[1], [
       username,
-      specialization,
-      contactInfo,
-      portfolio,
-      certifications,
-      insuranceDetails,
+        email,
+        password,
+        phone_number,
+        specialization,
+        description
+
     ]);
     res.status(201).json({ id: result.rows[0].id });
   } catch (error) {
@@ -80,11 +83,10 @@ exports.getArtisanById = async (req, res) => {
 exports.updateArtisan = async (req, res) => {
   const {
     username,
+    email,
+      phone_number,
     specialization,
-    contact_info,
-    portfolio,
-    certifications,
-    insurance_details,
+    description
   } = req.body;
   const id = req.user.id; // Use authenticated user's ID
   // const id = 1; // For testing purposes
@@ -92,46 +94,39 @@ exports.updateArtisan = async (req, res) => {
     let updatedArtisan = null;
 
     if (username) {
-      const result = await db.query(artisanQueries[3], [username, id]);
+      const result = await db.query(artisanQueries[2], [username, id]);
       if (result.rows.length > 0) {
         updatedArtisan = result.rows[0];
       }
     }
+    if (email) {
+        const result = await db.query(artisanQueries[3], [email, id]);
+        if (result.rows.length > 0) {
+            updatedArtisan = result.rows[0];
+        }
 
+    }
+    if (phone_number) {
+        const result = await db.query(artisanQueries[4], [phone_number, id]);
+        if (result.rows.length > 0) {
+            updatedArtisan = result.rows[0];
+        }
+    }
     if (specialization) {
-      const result = await db.query(artisanQueries[4], [specialization, id]);
+      const result = await db.query(artisanQueries[5], [specialization, id]);
       if (result.rows.length > 0) {
         updatedArtisan = result.rows[0];
       }
+    }
+    if (description) {
+        const result = await db.query(artisanQueries[6], [description, id]);
+        if (result.rows.length > 0) {
+            updatedArtisan = result.rows[0];
+        }
     }
 
-    if (contact_info) {
-      const result = await db.query(artisanQueries[5], [contact_info, id]);
-      if (result.rows.length > 0) {
-        updatedArtisan = result.rows[0];
-      }
-    }
 
-    if (portfolio) {
-      const result = await db.query(artisanQueries[6], [portfolio, id]);
-      if (result.rows.length > 0) {
-        updatedArtisan = result.rows[0];
-      }
-    }
 
-    if (certifications) {
-      const result = await db.query(artisanQueries[7], [certifications, id]);
-      if (result.rows.length > 0) {
-        updatedArtisan = result.rows[0];
-      }
-    }
-
-    if (insurance_details) {
-      const result = await db.query(artisanQueries[8], [insurance_details, id]);
-      if (result.rows.length > 0) {
-        updatedArtisan = result.rows[0];
-      }
-    }
 
     if (!updatedArtisan) {
       return res
@@ -155,7 +150,7 @@ exports.deleteArtisan = async (req, res) => {
     res.status(400).json({ message: "Artisan ID is required" });
   }
   try {
-    const result = await db.query(artisanQueries[9], [id]);
+    const result = await db.query(artisanQueries[7], [id]);
     const artisanId = result.rows[0];
     if (!artisanId) {
       return res.status(404).json({ message: "Artisan not found" });
@@ -175,7 +170,7 @@ exports.getArtisans = async (req, res) => {
   try {
     let result;
     if (specialization) {
-      result = await db.query(artisanQueries[11], [specialization]);
+      result = await db.query(artisanQueries[9], [specialization]);
     } else {
       res.json({ message: "No specialization provided for filtering" });
     }
@@ -188,8 +183,8 @@ exports.getArtisans = async (req, res) => {
 };
 
 exports.addCertification = async (req, res) => {
-  const artisanId = req.user.id;
-
+  const artisan_id= req.user.id;
+  const { issue_date } = req.body;
   try {
     if (!req.files || !req.files.attachment) {
       return res.status(400).send("Attachment required");
@@ -198,8 +193,9 @@ exports.addCertification = async (req, res) => {
     console.log(fileBuffer);
 
     const result = await db.query(certificationQueries[1], [
-      artisanId,
-      fileBuffer,
+        artisan_id,
+        issue_date,
+        fileBuffer,
     ]);
 
     res.status(201).json({
@@ -256,17 +252,12 @@ exports.deleteCertification = async (req, res) => {
 };
 
 exports.createProject = async (req, res) => {
-  const artisanId = req.user.id;
-  const { client_id, description, date, price, location } = req.body;
+  const artisan_id = req.user.id;
+  const { description , date , price , location } = req.body;
   console.log("creating");
   try {
     const creationResult = await db.query(projectQueries[1], [
-      artisanId,
-      client_id,
-      description,
-      date,
-      price,
-      location,
+      description , date , price , location,  artisan_id
     ]);
     const projectId = creationResult.rows[0].id;
 
@@ -339,6 +330,9 @@ exports.deleteProject = async (req, res) => {
   // TODO : check if the user is the owner of the project
   const { id } = req.body;
   const userId = req.user.id;
+  if ( id !== userId) {
+    return res.status(400).json({ message: "You are not the owner of the project" });
+  }
   try {
     const result = await db.query(projectQueries[5], [id, userId]);
     return res.status(200).json({
