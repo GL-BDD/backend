@@ -1,7 +1,9 @@
+/**
+ * Main server entry point, sets up routes and starts listening.
+ */
 const express = require("express");
 const app = express();
 require("dotenv").config();
-const bd = require("./db/connections");
 
 const cors = require("cors");
 app.use(cors());

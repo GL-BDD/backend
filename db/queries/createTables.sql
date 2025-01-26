@@ -28,15 +28,15 @@ CREATE TABLE
 
 --portfolio_projects(portfolio_projects_id,description,date,price,location,#artisan_id)
 CREATE TABLE
-    IF NOT EXISTS portfolio_projects ( --changed
-        portfolio_project_id SERIAL PRIMARY KEY, --changed
+    IF NOT EXISTS portfolio_projects (
+        portfolio_project_id SERIAL PRIMARY KEY,
         description TEXT,
         date DATE,
         price INTEGER,
         location VARCHAR(255),
-        --    client_id INTEGER REFERENCES clients(id) ON DELETE SET NULL --changed deleted
-        artisan_id INTEGER NOT NULL REFERENCES artisans (artisan_id) ON DELETE CASCADE, --changed refrence
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        artisan_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (artisan_id) REFERENCES artisans (artisan_id) ON DELETE CASCADE
     );
 
 --project_proposals(proposal_id,Description,start_date,end_date,specialization,accepted_status,#client_id,#artisan_id)
@@ -47,18 +47,28 @@ CREATE TABLE
         start_date DATE, --changed added
         end_date DATE, --changed added
         specialization VARCHAR(255),
-        accepted_status VARCHAR(255), -- changed TODO: add enum
-        client_id INTEGER REFERENCES clients (client_id) ON DELETE CASCADE,
-        artisan_id INTEGER REFERENCES artisans (artisan_id) ON DELETE CASCADE, --changed to cascade
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        accepted_status VARCHAR(255) NOT NULL DEFAULT 'cree' CHECK (accepted_status IN ('cree', 'accepte', 'refuse')),
+        client_id INTEGER,
+        artisan_id INTEGER DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (client_id) REFERENCES clients (client_id) ON DELETE CASCADE,
+        FOREIGN KEY (artisan_id) REFERENCES artisans (artisan_id) ON DELETE CASCADE
     );
 
--- accepted_projects(accepted_id,accepted_price,status,#proposal_id,#artisan_id)
+--accepted_projects(accepted_id,accepted_price,status,#proposal_id,#artisan_id)
 CREATE TABLE
     IF NOT EXISTS accepted_projects (
         accepted_id SERIAL PRIMARY KEY,
         accepted_price INTEGER,
-        status VARCHAR(255), --TODO: add enum
+        status VARCHAR(255) NOT NULL DEFAULT 'ouvert' CHECK (
+            status IN (
+                'ouvert',
+                'considere',
+                'commence',
+                'en cours',
+                'termine'
+            )
+        ),
         proposal_id INTEGER UNIQUE REFERENCES project_proposals (proposal_id) ON DELETE CASCADE,
         artisan_id INTEGER REFERENCES artisans (artisan_id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -75,7 +85,7 @@ CREATE TABLE
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
--- portfolio_project_images(image_id,Attachment,encoding,mime_type,#projet_id)
+--portfolio_project_images(image_id,Attachment,encoding,mime_type,#projet_id)
 CREATE TABLE
     IF NOT EXISTS portfolio_project_images ( -- changed added
         image_id SERIAL PRIMARY KEY,
@@ -125,10 +135,10 @@ CREATE TABLE
     IF NOT EXISTS quotes (
         quote_id SERIAL PRIMARY KEY,
         price INTEGER NOT NULL, --changed
-        unit VARCHAR(255) NOT NULL, --changed added TODO : add enum
+        unit VARCHAR(255) NOT NULL CHECK (unit IN ('heure', 'jour', 'projet', 'metre')),
         -- description TEXT, changed removed
-        artisan_id INTEGER REFERENCES artisans (artisan_id) ON DELETE CASCADE NOT NULL,
-        proposal_id INTEGER REFERENCES project_proposals (proposal_id) ON DELETE CASCADE NOT NULL,
+        artisan_id INTEGER REFERENCES artisans (artisan_id) ON DELETE CASCADE,
+        proposal_id INTEGER NOT NULL REFERENCES project_proposals (proposal_id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 

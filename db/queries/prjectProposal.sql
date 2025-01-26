@@ -77,3 +77,12 @@ WHERE project_proposals.proposal_id = $1
 GROUP BY 
   project_proposals.proposal_id,
   clients.client_id;
+
+----- update a project proposal's status 9
+UPDATE project_proposals
+SET accepted_status = $1
+WHERE proposal_id = $2
+returning accepted_status; 
+
+----- get project proposal by id 10
+SELECT artisan_id FROM project_proposals WHERE proposal_id = $1;

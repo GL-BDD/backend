@@ -1,7 +1,6 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
-const { decodeImages } = require("../utils/decodeImage");
 
 const artisanQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/artisans.sql"), "utf8")
@@ -17,6 +16,9 @@ const artisanQueries = fs
 //   }
 // };
 
+/**
+ * Creates a new artisan in the database.
+ */
 exports.createArtisan = async (req, res) => {
   const {
     username,
@@ -42,6 +44,9 @@ exports.createArtisan = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves a specific artisan by ID.
+ */
 exports.getArtisanById = async (req, res) => {
   const id = parseInt(req.params.id);
 
@@ -67,6 +72,9 @@ exports.getArtisanById = async (req, res) => {
   }
 };
 
+/**
+ * Updates artisan details based on specified fields.
+ */
 exports.updateArtisan = async (req, res) => {
   const { username, email, phone_number, specialization, description } =
     req.body;
@@ -121,6 +129,9 @@ exports.updateArtisan = async (req, res) => {
   }
 };
 
+/**
+ * Deletes an artisan based on the authenticated user's ID.
+ */
 exports.deleteArtisan = async (req, res) => {
   const id = req.user.id; // Use authenticated user's ID
   if (!id) {
@@ -141,6 +152,9 @@ exports.deleteArtisan = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves artisans, optionally filtered by specialization.
+ */
 exports.getArtisans = async (req, res) => {
   const { specialization } = req.query;
 

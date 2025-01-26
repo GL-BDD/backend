@@ -3,12 +3,12 @@ const router = express.Router();
 const { authenticateToken } = require("../middleware/authMiddleware");
 
 const {
-  createQuote,
+  createQuoteByArtisan,
   deleteQuote,
   getQuotesByProposalId,
 } = require("../controllers/quoteController");
 
-router.post("/", authenticateToken, createQuote);
+router.post("/", authenticateToken, createQuoteByArtisan);
 router.get("/:id", authenticateToken, getQuotesByProposalId);
 router.delete("/:id", authenticateToken, deleteQuote);
 
