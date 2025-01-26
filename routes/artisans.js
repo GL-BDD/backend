@@ -5,9 +5,6 @@ const {
   createArtisan,
   updateArtisan,
   deleteArtisan,
-  createProject,
-  getArtisanProjects,
-  deleteProject,
 } = require("../controllers/artisanController");
 
 const {
@@ -15,6 +12,12 @@ const {
   getCertifications,
   deleteCertification,
 } = require("../controllers/certificationController");
+
+const {
+  createPortfolioProject,
+  getArtisanPortfolioProjects,
+  deletePortfolioProject,
+} = require("../controllers/portfolioProjects");
 
 const {
   authenticateToken,
@@ -50,15 +53,19 @@ router.delete(
   deleteCertification
 );
 
-router.post("/project", authenticateToken, isArtisan, createProject);
+router.post("/project", authenticateToken, isArtisan, createPortfolioProject);
 
-router.get("/project/:id([0-9]+)", authenticateToken, getArtisanProjects);
+router.get(
+  "/project/:id([0-9]+)",
+  authenticateToken,
+  getArtisanPortfolioProjects
+);
 
 router.delete(
   "/project/:id([0-9]+)",
   authenticateToken,
   isArtisan,
-  deleteProject
+  deletePortfolioProject
 );
 
 module.exports = router;

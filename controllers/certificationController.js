@@ -1,7 +1,7 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
-const { decodeImages } = require("../utils/decodeImage");
+const { decodeImage } = require("../utils/decodeImage");
 
 const certificationQueries = fs
   .readFileSync(
@@ -48,7 +48,7 @@ exports.getCertifications = async (req, res) => {
   try {
     const result = await db.query(certificationQueries[3], [artisanId]);
     const certifications = result.rows;
-    const certificationsWithImages = await decodeImages(certifications);
+    const certificationsWithImages = await decodeImage(certifications);
     return res.status(200).json({
       message: "Certifications retrieved successfully",
       certifications: certificationsWithImages,
