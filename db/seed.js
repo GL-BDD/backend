@@ -1,17 +1,26 @@
-const fs = require("fs");
-const path = require("path");
 const db = require("./connections"); // Your database connection file
+const seedData = require("./seeds.json");
 
-(async () => {
+async function insertData(table, data) {
   try {
-    const seedSql = fs
-      .readFileSync(path.join(__dirname, "./queries/seedData.sql"))
-      .toString();
-    await db.query(seedSql);
-    console.log("Database seeded successfully!");
-    process.exit(0);
-  } catch (error) {
-    console.error("Error seeding database:", error);
-    process.exit(1);
+    for (const row of data) {
+      const columns = Object.keys(row).join(", ");
+      const values = Object.values(row);
+      const placeholders = values.map((_, i) => `$${i + 1}`).join(", ");
+      const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`;
+      await db.query(query, values);
+    }
+    console.log(`Data inserted into ${table}`);
+  } catch (err) {
+    console.error(`Error inserting data into ${table}:`, err);
   }
-})();
+}
+
+// Insert all sample data
+async function insertAllData() {
+  for (const [table, data] of Object.entries(seedData)) {
+    await insertData(table, data);
+  }
+}
+
+insertAllData();

@@ -104,7 +104,7 @@ exports.login = async (req, res) => {
     // Generate JWT
     const token = jwt.sign(
       {
-        id: user.id,
+        id: role == "artisan" ? user.artisan_id : user.client_id,
         username: user.username,
         role,
         email: user.email,

@@ -1,8 +1,10 @@
 -- create quote 0
-insert into quotes (artisan_id, proposal_id, quote, description) values ($1, $2, $3, $4) returning id;
+insert into quotes (price, unit, artisan_id, proposal_id) values ($1, $2, $3, $4) returning *;
 
 ----- get quotes by proposal id
-select * from quotes where proposal_id = $1
+select * from quotes where proposal_id = $1 RETURNING * ;
 
 ----- delete a quote 2
-delete from quotes where artisan_id = $1 and id = $2 returning id;
+delete from quotes where artisan_id = $1 and quote_id = $2 returning quote_id;
+
+----- g

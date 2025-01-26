@@ -1,18 +1,24 @@
 const express = require("express");
-const fileUpload = require("express-fileupload");
 const {
   getArtisans,
   getArtisanById,
   createArtisan,
   updateArtisan,
   deleteArtisan,
+} = require("../controllers/artisanController");
+
+const {
   addCertification,
   getCertifications,
   deleteCertification,
-  createProject,
-  getArtisanProjects,
-  deleteProject,
-} = require("../controllers/artisanController");
+} = require("../controllers/certificationController");
+
+const {
+  createPortfolioProject,
+  getArtisanPortfolioProjects,
+  deletePortfolioProject,
+} = require("../controllers/portfolioProjects");
+
 const {
   authenticateToken,
   isArtisan,
@@ -20,9 +26,6 @@ const {
 const artisanSchema = require("../validations/aritsanValidation");
 const validateRequest = require("../middleware/validationMiddleware");
 const router = express.Router();
-
-// Add express-fileupload middleware
-router.use(fileUpload());
 
 router.get("/", getArtisans);
 router.get("/:id([0-9]+)", getArtisanById); // Add regex validation for numeric ID
@@ -40,17 +43,7 @@ router.get("/?specialization=:specialization", getArtisans);
 
 // routes for certifications
 // Remove express.raw() and use express-fileupload for the /certifications route
-router.post(
-  "/certifications",
-  authenticateToken,
-  isArtisan,
-  (req, res, next) => {
-    // Log info to ensure file is uploaded
-    console.log(req.files?.attachment);
-    next();
-  },
-  addCertification,
-);
+router.post("/certifications", authenticateToken, isArtisan, addCertification);
 router.get("/certifications/:id([0-9]+)", getCertifications);
 
 router.delete(
@@ -60,15 +53,19 @@ router.delete(
   deleteCertification,
 );
 
-router.post("/project", authenticateToken, isArtisan, createProject);
+router.post("/project", authenticateToken, isArtisan, createPortfolioProject);
 
-router.get("/project/:id([0-9]+)", authenticateToken, getArtisanProjects);
+router.get(
+  "/project/:id([0-9]+)",
+  authenticateToken,
+  getArtisanPortfolioProjects,
+);
 
 router.delete(
   "/project/:id([0-9]+)",
   authenticateToken,
   isArtisan,
-  deleteProject,
+  deletePortfolioProject,
 );
 
 module.exports = router;
