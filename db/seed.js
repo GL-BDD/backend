@@ -1,14 +1,8 @@
-const fs = require("fs");
-const path = require("path");
 const db = require("./connections"); // Your database connection file
 const seedData = require('./seeds.json')
 
-const dropTables=(table)=>{
-  console.log(table)
-}
 
 async function insertData(table, data) {
-  dropTable(table);
   try {
     for (const row of data) {
       const columns = Object.keys(row).join(', ');
