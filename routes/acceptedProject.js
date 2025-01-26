@@ -1,12 +1,15 @@
 const express = require("express");
 
 const {
-    createAcceptedProject
-  } = require("../controllers/acceptedProjectsController");
+  createAcceptedProject,
+} = require("../controllers/acceptedProjectsController");
 
-const { authenticateToken } = require("../middleware/authMiddleware");
+const {
+  authenticateToken,
+  isArtisan,
+} = require("../middleware/authMiddleware");
 const router = express.Router();
 
-router.post("/", authenticateToken, createAcceptedProject);
+router.post("/", authenticateToken, isArtisan, createAcceptedProject);
 
 module.exports = router;
