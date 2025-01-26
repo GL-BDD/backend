@@ -67,16 +67,6 @@ exports.createPortfolioProject = async (req, res) => {
   }
 };
 
-const getProjectAttachments = async (projectId) => {
-  try {
-    const result = await db.query(portfolioProjectQueries[3], [projectId]);
-    return result.rows;
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
-};
-
 exports.getArtisanPortfolioProjects = async (req, res) => {
   const { id } = req.params;
   try {

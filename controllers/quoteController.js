@@ -7,14 +7,14 @@ const quoteQueries = fs
   .split("---");
 
 exports.createQuote = async (req, res) => {
-  const artisanId = req.user.id;
-  const { quote, description, proposalId } = req.body;
+  const artisan_id = req.user.id;
+  const { price, unit, proposal_id } = req.body;
   try {
     const result = await db.query(quoteQueries[0], [
-      artisanId,
-      proposalId,
-      quote,
-      description,
+      price,
+      unit,
+      artisan_id,
+      proposal_id,
     ]);
     const quoteId = result.rows[0].id;
     return res
