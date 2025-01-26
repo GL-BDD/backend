@@ -44,7 +44,6 @@ exports.getClientById = async (req, res) => {
 
 exports.updateClient = async (req, res) => {
   const { username, email } = req.body;
-  console.log(req.user);
   const id = req.user.id;
   // const id = 1; // for testing the api
   try {
@@ -89,7 +88,6 @@ exports.deleteClient = async (req, res) => {
     const result = await db.query(clientQueries[5], [id]);
     const clientId = result.rows[0];
     if (!clientId) {
-      console.log("client not found");
       return res.status(404).json({ message: "Client not found" });
     }
     res.status(200).json({ message: "client deleted successfully", clientId });

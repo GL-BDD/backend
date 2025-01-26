@@ -72,10 +72,11 @@ exports.getArtisanPortfolioProjects = async (req, res) => {
   try {
     const result = await db.query(portfolioProjectQueries[4], [id]);
     const projects = result.rows;
-    decodeProjectsImages(projects);
-    return res
-      .status(200)
-      .json({ message: "Projects fetched successfully", projects });
+    const projectsWithImages = decodeProjectsImages(projects);
+    return res.status(200).json({
+      message: "Projects fetched successfully",
+      projects: projectsWithImages,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching projects" });

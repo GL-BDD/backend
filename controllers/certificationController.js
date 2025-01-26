@@ -27,10 +27,11 @@ exports.addCertification = async (req, res) => {
       mimetype,
       artisan_id,
     ]);
+    const certificationWithImages = await decodeImage([result.rows[0]]);
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Certification added successfully",
-      certificationId: result.rows[0].id,
+      certification: certificationWithImages,
     });
   } catch (error) {
     console.error(error);

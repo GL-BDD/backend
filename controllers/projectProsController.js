@@ -86,7 +86,6 @@ const addProposalImages = async (projectId, coming_attachments) => {
         attachments = [attachments];
       }
       for (let attachment of attachments) {
-        console.log(attachment);
         const fileBuffer = attachment.data;
         const mime_type = attachment.mimetype;
         const encoding = attachment.encoding;
@@ -204,12 +203,10 @@ exports.deleteProject = async (req, res) => {
     if (result.rowCount === 0) {
       return res.status(404).json({ message: "Project not found" });
     }
-    return res
-      .status(200)
-      .json({
-        message: "Project deleted successfully",
-        project_id: result.rows[0].proposal_id,
-      });
+    return res.status(200).json({
+      message: "Project deleted successfully",
+      project_id: result.rows[0].proposal_id,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error deleting project" });
