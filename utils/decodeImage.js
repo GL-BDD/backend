@@ -1,5 +1,4 @@
 const decodeOneProjectImages = (project) => {
-  console.log(project);
   if (project.attachments) {
     // Convert the BYTEA (binary) data to a Base64 string
     project.attachments = project.attachments.map((attachment) => {
@@ -62,7 +61,6 @@ const decodeOneProjectImages = (project) => {
 
 exports.decodeProjectsImages = (projects) => {
   const projectsWithImages = projects.map((project) => {
-    console.log("hehelll");
     return decodeOneProjectImages(project);
   });
   return projectsWithImages;

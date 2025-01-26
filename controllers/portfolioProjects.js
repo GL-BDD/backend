@@ -68,7 +68,6 @@ exports.createPortfolioProject = async (req, res) => {
 };
 
 exports.getArtisanPortfolioProjects = async (req, res) => {
-  console.log("heeeeee");
   const { id } = req.params;
   try {
     const result = await db.query(portfolioProjectQueries[4], [id]);

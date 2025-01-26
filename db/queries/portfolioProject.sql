@@ -12,7 +12,7 @@ select * from portfolio_project_images where project_id= $1;
 
 ----- get projects by artisan id 4
 SELECT 
-  portfolio_projects.*,
+  portfolio_projects.*,TO_CHAR(portfolio_projects.date:: DATE, 'dd/MM/yyyy') date,
   COALESCE(
     JSON_AGG(
       JSON_BUILD_OBJECT(
