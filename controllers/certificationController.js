@@ -6,7 +6,7 @@ const { decodeImage } = require("../utils/decodeImage");
 const certificationQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/certifications.sql"),
-    "utf8"
+    "utf8",
   )
   .split("---");
 

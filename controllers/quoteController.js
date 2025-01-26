@@ -9,14 +9,14 @@ const quoteQueries = fs
 const projectProposalsQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/acceptedProject.sql"),
-    "utf8"
+    "utf8",
   )
   .split("---");
 
 const accepted_projectsQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/acceptedProject.sql"),
-    "utf8"
+    "utf8",
   )
   .split("---");
 
@@ -83,10 +83,18 @@ exports.acceptQuote = async (req, res) => {
   try {
     const result = await db.query(quoteQueries[1], [id]);
     const { artisan_id, proposal_id, price } = result.rows[0];
-    const new_accepted_projct = await db.query(accepted_projectsQueries[1], [price, proposal_id, artisan_id]);
-    await db.query(projectProposalsQueries[9], ['accepte', proposal_id]);
-    return res.status(200).json({ message: "quote accepted successfully", accepted_project: new_accepted_projct.rows[0] });
-
+    const new_accepted_projct = await db.query(accepted_projectsQueries[1], [
+      price,
+      proposal_id,
+      artisan_id,
+    ]);
+    await db.query(projectProposalsQueries[9], ["accepte", proposal_id]);
+    return res
+      .status(200)
+      .json({
+        message: "quote accepted successfully",
+        accepted_project: new_accepted_projct.rows[0],
+      });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "error accepting quote" });
@@ -101,14 +109,13 @@ exports.refuseQuote = async (req, res) => {
   try {
     const result = await db.query(quoteQueries[1], [id]);
     const { proposal_id } = result.rows[0];
-    await db.query(projectProposalsQueries[9], ['refuse', proposal_id]);
+    await db.query(projectProposalsQueries[9], ["refuse", proposal_id]);
     return res.status(200).json({ message: "quote refused successfully" });
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "error refusing quote" });
   }
-}
+};
 
 /**
  * Creates a quote by a client.
@@ -130,4 +137,4 @@ exports.createQuoteByClient = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "error creating quote" });
   }
-}
+};

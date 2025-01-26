@@ -9,7 +9,7 @@ const {
 const portfolioProjectQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/portfolioProject.sql"),
-    "utf8"
+    "utf8",
   )
   .split("---");
 

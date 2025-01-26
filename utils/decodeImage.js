@@ -87,7 +87,7 @@ exports.decodeImage = (certifications) => {
     if (certification.attachment) {
       // Convert the BYTEA (binary) data to a Base64 string
       const base64Image = Buffer.from(certification.attachment).toString(
-        "base64"
+        "base64",
       );
       return {
         ...certification,

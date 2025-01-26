@@ -1,13 +1,12 @@
 const db = require("./connections"); // Your database connection file
-const seedData = require('./seeds.json')
-
+const seedData = require("./seeds.json");
 
 async function insertData(table, data) {
   try {
     for (const row of data) {
-      const columns = Object.keys(row).join(', ');
+      const columns = Object.keys(row).join(", ");
       const values = Object.values(row);
-      const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
+      const placeholders = values.map((_, i) => `$${i + 1}`).join(", ");
       const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`;
       await db.query(query, values);
     }
