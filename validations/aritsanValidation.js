@@ -1,3 +1,6 @@
+/**
+ * Defines validation schemas for creating and updating Artisans.
+ */
 const { checkSchema } = require("express-validator");
 
 const artisanSchema = {
