@@ -6,7 +6,7 @@ const { decodeProjectsImages } = require("../utils/decodeImage");
 const projectProposalsQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/prjectProposal.sql"),
-    "utf8",
+    "utf8"
   )
   .split("---");
 
@@ -14,9 +14,9 @@ const quoteQueries = fs
   .readFileSync(path.join(__dirname, "../db/queries/quotes.sql"), "utf8")
   .split("---");
 
-/**
- * Retrieves project proposals based on filters.
- */
+// /**
+//  * Retrieves project proposals based on filters.
+//  */
 exports.getProjectProposals = async (req, res) => {
   const { specialization, artisanId } = req.query;
   try {
@@ -33,11 +33,10 @@ exports.getProjectProposals = async (req, res) => {
       ]);
       const projects = result.rows;
       const projectsWithImages = decodeProjectsImages(projects);
-      res.status(200).json({
+      return res.status(200).json({
         message: "Projects fetched successfully",
         projects: projectsWithImages,
       });
-      return res.json(projectsWithImages);
     }
     if (artisanId) {
       const result = await db.query(projectProposalsQueries[5], [artisanId]);
@@ -137,7 +136,7 @@ exports.createProjectForOneArtisan = async (req, res) => {
 
     const images = await addProposalImages(
       project.proposal_id,
-      req.files.attachments,
+      req.files.attachments
     );
     project.attachments = images;
     const projectsWithImages = decodeProjectsImages([project]);
@@ -183,7 +182,7 @@ exports.createProjectForAllArtisans = async (req, res) => {
 
     const images = await addProposalImages(
       project.proposal_id,
-      req.files.attachments,
+      req.files.attachments
     );
     project.attachments = images;
     const projectsWithImages = decodeProjectsImages([project]);
