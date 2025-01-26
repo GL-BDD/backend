@@ -1,36 +1,40 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
-const { decodeImages } = require("../utils/decodeImage");
+const { decodeProjectsImages } = require("../utils/decodeImage");
 
-const projectQueries = fs
+const projectProposalsQueries = fs
   .readFileSync(
     path.join(__dirname, "../db/queries/prjectProposal.sql"),
-    "utf8",
+    "utf8"
   )
   .split("---");
 
-exports.getProjects = async (req, res) => {
+exports.getProjectProposals = async (req, res) => {
   const { specialization, artisanId } = req.query;
   try {
     if (!specialization && !artisanId) {
-      const result = await db.query(projectQueries[0]);
+      const result = await db.query(projectProposalsQueries[0]);
       const projects = result.rows;
       return res
         .status(200)
         .json({ message: "Projects fetched successfully", projects });
     }
     if (specialization) {
-      const result = await db.query(projectQueries[4], [specialization]);
+      const result = await db.query(projectProposalsQueries[4], [
+        specialization,
+      ]);
       const projects = result.rows;
-      const projectsWithImages = decodeImages(projects);
+      const projectsWithImages = decodeProjectsImages(projects);
+      return res.json(projectsWithImages);
+
       return res.status(200).json({
         message: "Projects fetched successfully",
         projects: projectsWithImages,
       });
     }
     if (artisanId) {
-      const result = await db.query(projectQueries[5], [artisanId]);
+      const result = await db.query(projectProposalsQueries[5], [artisanId]);
       const projects = result.rows;
       return res
         .status(200)
@@ -42,16 +46,17 @@ exports.getProjects = async (req, res) => {
   }
 };
 
-exports.getProjectById = async (req, res) => {
+exports.getProjectProposalById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db.query(projectQueries[8], [id]);
+    const result = await db.query(projectProposalsQueries[8], [id]);
     const project = result.rows[0];
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    decodeImages(project)
-    return res.status(200).json({ message: "Project fetched successfully", project });
+    return res
+      .status(200)
+      .json({ message: "Project fetched successfully", project });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching project" });
@@ -59,25 +64,27 @@ exports.getProjectById = async (req, res) => {
 };
 
 const addProposalImages = async (projectId, coming_attachments) => {
-  console.log(projectId);
+  let resultRows = [];
   if (coming_attachments) {
     try {
       let attachments = coming_attachments;
       if (!Array.isArray(attachments)) {
         attachments = [attachments];
       }
-      let resultRows = [];
       for (attachment of attachments) {
+        console.log(attachment);
         const fileBuffer = attachment.data;
+        const mime_type = attachment.mimetype;
         const encoding = attachment.encoding;
-        const result = await db.query(projectQueries[6], [
-          projectId,
+        const result = await db.query(projectProposalsQueries[6], [
           fileBuffer,
           encoding,
+          mime_type,
+          projectId,
         ]);
         resultRows.push(result.rows[0]);
       }
-      console.log("we here");
+      return resultRows;
     } catch (error) {
       console.error(error);
       return {
@@ -86,17 +93,34 @@ const addProposalImages = async (projectId, coming_attachments) => {
     }
   }
 };
-exports.createProjectForOneClient = async (req, res) => {
+exports.createProjectForOneArtisan = async (req, res) => {
   const client_id = req.user.id;
-  const { description, status, artisan_id } = req.body;
+  const { description, start_date, end_date, artisan_id } = req.body;
   try {
-    const result = await db.query(projectQueries[1], [
-      client_id,
-      artisan_id,
+    const result = await db.query(projectProposalsQueries[1], [
       description,
-      status,
+      start_date,
+      end_date,
+      artisan_id,
+      client_id,
     ]);
-    res.status(201).json({ id: result.rows[0].id });
+    const project = result.rows[0];
+    if (!req.files || !req.files.attachments) {
+      return res
+        .status(201)
+        .json({ message: "Project created successfully", project });
+    }
+
+    const images = await addProposalImages(
+      project.proposal_id,
+      req.files.attachments
+    );
+    project.attachments = images;
+    const projectsWithImages = decodeProjectsImages([project]);
+    res.status(201).json({
+      message: "Project created successfully",
+      project: projectsWithImages[0],
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -104,18 +128,32 @@ exports.createProjectForOneClient = async (req, res) => {
 };
 exports.createProjectForAllArtisans = async (req, res) => {
   const client_id = req.user.id;
-  const { description, status, specialization } = req.body;
-  const attachments = req.files.attachments;
+  const { description, start_date, end_date, specialization } = req.body;
   try {
-    const result = await db.query(projectQueries[2], [
-      client_id,
-      specialization,
+    const result = await db.query(projectProposalsQueries[2], [
       description,
-      status,
+      start_date,
+      end_date,
+      specialization,
+      client_id,
     ]);
-    const projectId = result.rows[0].id;
-    await addProposalImages(projectId, attachments);
-    res.status(201).json({ id: result.rows[0].id });
+    const project = result.rows[0];
+    if (!req.files || !req.files.attachments) {
+      return res
+        .status(201)
+        .json({ message: "Project created successfully", project });
+    }
+
+    const images = await addProposalImages(
+      project.proposal_id,
+      req.files.attachments
+    );
+    project.attachments = images;
+    const projectsWithImages = decodeProjectsImages([project]);
+    res.status(201).json({
+      message: "Project created successfully",
+      project: projectsWithImages[0],
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -127,11 +165,16 @@ exports.deleteProject = async (req, res) => {
     return res.status(400).json({ message: "Invalid Project ID" });
   }
   try {
-    const result = await db.query(projectQueries[3], [id]);
+    const result = await db.query(projectProposalsQueries[3], [id]);
     if (result.rowCount === 0) {
       return res.status(404).json({ message: "Project not found" });
     }
-    return res.status(200).json({ message: "Project deleted successfully" });
+    return res
+      .status(200)
+      .json({
+        message: "Project deleted successfully",
+        project_id: result.rows[0].proposal_id,
+      });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error deleting project" });
