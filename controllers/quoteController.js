@@ -89,12 +89,10 @@ exports.acceptQuote = async (req, res) => {
       artisan_id,
     ]);
     await db.query(projectProposalsQueries[9], ["accepte", proposal_id]);
-    return res
-      .status(200)
-      .json({
-        message: "quote accepted successfully",
-        accepted_project: new_accepted_projct.rows[0],
-      });
+    return res.status(200).json({
+      message: "quote accepted successfully",
+      accepted_project: new_accepted_projct.rows[0],
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "error accepting quote" });
