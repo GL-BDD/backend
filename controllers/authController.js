@@ -57,8 +57,8 @@ exports.register = async (req, res) => {
       const result = await db.query(artisanQueries[1], [
         username,
         email,
-        phoneNumber,
         hashedPassword,
+        phoneNumber,
       ]);
       return res.status(201).json({ user: result.rows[0] });
     } catch (error) {
@@ -113,7 +113,7 @@ exports.login = async (req, res) => {
       JWT_SECRET, // Secret key
       {
         expiresIn: JWT_EXPIRES_IN, // Token expiration
-      },
+      }
     );
 
     // Respond with the generated token

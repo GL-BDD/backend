@@ -2,7 +2,7 @@
 SELECT * FROM artisans;
 
 ----- create a new artisan 1
-INSERT INTO artisans (username,email,password,phone_number,specialization,description) VALUES ($1, $2, $3,$4,$5,$6) RETURNING artisan_id, username;
+INSERT INTO artisans (username,email,password,phone_number) VALUES ($1, $2, $3,$4) RETURNING artisan_id, username;
 
 ----- Update artisan name 2
 UPDATE artisans
