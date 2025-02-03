@@ -121,7 +121,6 @@ exports.updateArtisan = async (req, res) => {
 
     return res.status(200).json({
       message: "Artisan updated successfully",
-      artisan: updatedArtisan,
     });
   } catch (error) {
     console.error(error);

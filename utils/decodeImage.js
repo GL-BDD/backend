@@ -97,3 +97,19 @@ exports.decodeImage = (certifications) => {
   });
   return certificationsWithImages;
 };
+
+
+
+
+exports.decodeProjectImage = (project) => {
+  console.log(project)
+  if (project.attachment) {
+    // Convert the BYTEA (binary) data to a Base64 string
+    const base64Image = Buffer.from(project.attachment.attachment).toString(
+      "base64",
+    );
+    project.attachment = `data:${project.attachment.mime_type};base64,${base64Image}`;
+    console.log(`this is the project after the operation : ${project}`);
+  }
+  return project;
+};
