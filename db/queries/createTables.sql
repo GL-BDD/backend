@@ -9,7 +9,7 @@ CREATE TABLE
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
---artisans(artisan_id,username,email,password,phone_number,specialization,description,created_at)
+--artisans(artisan_id,username,email,password,phone_number,,specialization,description,created_at)
 CREATE TABLE
     IF NOT EXISTS artisans (
         artisan_id SERIAL PRIMARY KEY,
@@ -147,3 +147,33 @@ CREATE TABLE
 --     project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
 --     attachment BYTEA
 -- );
+----- get projects by artisan id 5
+SELECT
+    clients.username client_username,
+    project_proposals.description,
+    project_proposals.start_date,
+    project_proposals.end_date,
+    quotes.price,
+    quotes.unit
+FROM
+    project_proposals
+    LEFT JOIN clients ON clients.client_id = project_proposals.client_id
+    LEFT JOIN quotes ON quotes.proposal_id = project_proposals.proposal_id
+WHERE
+    project_proposals.artisan_id = $1;
+
+
+----- get projects by specialization 4
+SELECT
+    clients.username client_username,
+    project_proposals.description,
+    project_proposals.start_date,
+    project_proposals.end_date,
+    quotes.price,
+    quotes.unit
+FROM
+    project_proposals
+    LEFT JOIN clients ON clients.client_id = project_proposals.client_id
+    LEFT JOIN quotes ON quotes.proposal_id = project_proposals.proposal_id
+WHERE
+    project_proposals.specialization= $1;
