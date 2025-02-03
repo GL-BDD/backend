@@ -25,6 +25,7 @@ const {
 } = require("../middleware/authMiddleware");
 const artisanSchema = require("../validations/aritsanValidation");
 const validateRequest = require("../middleware/validationMiddleware");
+const { getProjectProposalById, getProjectProposalBySpeciality } = require("../controllers/projectProsController");
 const router = express.Router();
 
 router.get("/", getArtisans);
@@ -68,4 +69,6 @@ router.delete(
   deletePortfolioProject,
 );
 
+router.get("/project", authenticateToken, getProjectProposalById);
+router.get("/project/specialization", authenticateToken, getProjectProposalBySpeciality);
 module.exports = router;

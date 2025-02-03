@@ -113,3 +113,21 @@ exports.decodeProjectImage = (project) => {
   }
   return project;
 };
+
+
+const decodeImage = (project) => {
+  if (project.attachment) {
+    // Convert the BYTEA (binary) data to a Base64 string
+    const base64Image = Buffer.from(project.attachment).toString(
+      "base64",
+    );
+    project.attachment = `data:${project.mime_type};base64,${base64Image}`;
+  }
+  return project;
+};
+exports.decodeProjectImages = (projects) => {
+  const projectsWithImages = projects.map((project) => {
+    return decodeImage(project);
+  });
+  return projectsWithImages;
+}

@@ -1,7 +1,7 @@
 const db = require("../db/connections");
 const fs = require("fs");
 const path = require("path");
-const { decodeProjectsImages, decodeProjectImage } = require("../utils/decodeImage");
+const { decodeProjectsImages, decodeProjectImage, decodeProjectImages } = require("../utils/decodeImage");
 
 const projectProposalsQueries = fs
   .readFileSync(
@@ -62,18 +62,43 @@ exports.getProjectProposals = async (req, res) => {
  * Retrieves a single project proposal by ID.
  */
 exports.getProjectProposalById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
+  console.log(id);
   try {
-    const result = await db.query(projectProposalsQueries[8], [id]);
-    const project = result.rows[0];
+    const result = await db.query(projectProposalsQueries[11], [id]);
+    const project = result.rows;
+    console.log(project);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    const projectWithImage = decodeProjectImage(project);
-    console.log("Decoded Project:", JSON.stringify(projectWithImage));
-    return res
-      .status(200)
-      .json({ message: "Project fetched successfully", project: projectWithImage });
+    const projectWithImages = decodeProjectImages(project);
+    return res.status(200).json({
+      message: "Project fetched successfully",
+      project: projectWithImages,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error fetching project" });
+  }
+};
+
+
+
+exports.getProjectProposalBySpeciality = async (req, res) => {
+  const { specialization } = req.user;
+  console.log(specialization);
+  try {
+    const result = await db.query(projectProposalsQueries[12], [specialization]);
+    const project = result.rows;
+    console.log(project);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    const projectWithImages = decodeProjectImages(project);
+    return res.status(200).json({
+      message: "Project fetched successfully",
+      project: projectWithImages,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error fetching project" });

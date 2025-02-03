@@ -86,3 +86,40 @@ returning accepted_status;
 
 ----- get project proposal by id 10
 SELECT artisan_id FROM project_proposals WHERE proposal_id = $1;
+
+
+
+----- get projects by artisan id 11
+SELECT
+    clients.username client_username,
+    project_proposals.description,
+    project_proposals.start_date,
+    project_proposal_images.* , 
+    project_proposals.end_date,
+    quotes.price,
+    quotes.unit
+FROM
+    project_proposals
+    LEFT JOIN clients ON clients.client_id = project_proposals.client_id
+    LEFT JOIN quotes ON quotes.proposal_id = project_proposals.proposal_id
+    LEFT JOIN project_proposal_images ON project_proposals.proposal_id = project_proposal_images.project_id
+WHERE
+    project_proposals.artisan_id = $1;
+
+
+----- get projects by specialization 12
+SELECT
+    clients.username client_username,
+    project_proposals.description,
+    project_proposals.start_date,
+    project_proposal_images.* ,
+    project_proposals.end_date,
+    quotes.price,
+    quotes.unit
+FROM
+    project_proposals
+    LEFT JOIN clients ON clients.client_id = project_proposals.client_id
+    LEFT JOIN quotes ON quotes.proposal_id = project_proposals.proposal_id
+    LEFT JOIN project_proposal_images ON project_proposals.proposal_id = project_proposal_images.project_id
+WHERE
+    project_proposals.specialization= $1;
